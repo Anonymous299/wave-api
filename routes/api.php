@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\GetNearbyUsers;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -10,4 +12,9 @@ Route::get('/user', function (Request $request) {
 
 Route::prefix('users')->name('users.')->group(function () {
     Route::get('nearby', GetNearbyUsers::class)->name('nearby');
+});
+
+Route::prefix('auth')->name('auth.')->group(function () {
+    Route::post('register', RegisterController::class)->name('register');
+    Route::post('login', LoginController::class)->name('login');
 });
