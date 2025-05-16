@@ -3,6 +3,7 @@
 use App\Http\Controllers\GetNearbyUsers;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\StoreSwipeController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -11,6 +12,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('me', function () {
             return response()->json(auth()->user());
         })->name('me');
+    });
+
+    Route::prefix('swipes')->name('swipes.')->group(function () {
+        Route::post('/', StoreSwipeController::class)->name('store');
     });
 });
 
