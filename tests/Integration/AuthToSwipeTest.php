@@ -2,7 +2,6 @@
 
 namespace Integration;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User;
 use Tests\TestCase;
 
