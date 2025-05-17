@@ -5,6 +5,10 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('health', function () {
+    return response()->json(['status' => 'ok']);
+})->name('health');
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('users')->name('users.')->group(function () {
         Route::get('nearby', GetNearbyUsers::class)->name('nearby');
