@@ -13,13 +13,13 @@ tags:
 paths:
   /api/health:
     get:
-      summary: ''
-      operationId: getApiHealth
-      description: ''
+      summary: Health
+      operationId: health
+      description: 'Checks that the API is up and running.'
       parameters: []
       responses:
         200:
-          description: ''
+          description: 'API is up and running'
           content:
             application/json:
               schema:
@@ -35,23 +35,51 @@ paths:
       security: []
   /api/users/nearby:
     get:
-      summary: ''
-      operationId: getApiUsersNearby
-      description: ''
-      parameters: []
+      summary: 'Get Nearby Users'
+      operationId: getNearbyUsers
+      description: "Retrieves users within a specified distance from the given latitude and longitude.\nIf latitude and longitude are not provided, the auth'd user's location will be used.\n\nthese are query params"
+      parameters:
+        -
+          in: query
+          name: latitude
+          description: "The latitude of the user's location."
+          example: 4326.41688
+          required: false
+          schema:
+            type: number
+            description: "The latitude of the user's location."
+            example: 4326.41688
+            nullable: false
+        -
+          in: query
+          name: longitude
+          description: "The longitude of the user's location."
+          example: 4326.41688
+          required: false
+          schema:
+            type: number
+            description: "The longitude of the user's location."
+            example: 4326.41688
+            nullable: false
+        -
+          in: query
+          name: distance
+          description: 'The distance in kilometers to search for users.'
+          example: 4326.41688
+          required: true
+          schema:
+            type: number
+            description: 'The distance in kilometers to search for users.'
+            example: 4326.41688
+            nullable: false
       responses:
-        401:
+        200:
           description: ''
           content:
-            application/json:
+            text/plain:
               schema:
-                type: object
-                example:
-                  message: Unauthenticated.
-                properties:
-                  message:
-                    type: string
-                    example: Unauthenticated.
+                type: string
+                example: "{\n  \"users\": [\n    {id: \"98cca5ca-ca31-4031-a41b-241dc0876d5f\" name: \"John Doe\" distance: 1234},\n  ]"
       tags:
         - Endpoints
       requestBody:
@@ -63,12 +91,12 @@ paths:
               properties:
                 latitude:
                   type: number
-                  description: ''
+                  description: 'This field is required when <code>longitude</code> is present.'
                   example: 4326.41688
                   nullable: false
                 longitude:
                   type: number
-                  description: ''
+                  description: 'This field is required when <code>latitude</code> is present.'
                   example: 4326.41688
                   nullable: false
                 distance:
@@ -77,8 +105,6 @@ paths:
                   example: 17
                   nullable: false
               required:
-                - latitude
-                - longitude
                 - distance
       security: []
   /api/users/me:
@@ -105,11 +131,18 @@ paths:
       security: []
   /api/users/location:
     post:
-      summary: ''
-      operationId: postApiUsersLocation
-      description: ''
+      summary: 'Change User Location'
+      operationId: changeUserLocation
+      description: 'Updates the location of the authenticated user.'
       parameters: []
-      responses: {  }
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  \"message\": \"Location updated successfully.\"\n  \"user_id\": \"08e1608c-eb31-4623-bde6-b63646daecf9\",\n}"
       tags:
         - Endpoints
       requestBody:
@@ -121,12 +154,12 @@ paths:
               properties:
                 latitude:
                   type: number
-                  description: ''
+                  description: 'The latitude of the user.'
                   example: 4326.41688
                   nullable: false
                 longitude:
                   type: number
-                  description: ''
+                  description: 'The longitude of the user.'
                   example: 4326.41688
                   nullable: false
               required:
@@ -135,11 +168,35 @@ paths:
       security: []
   /api/swipes:
     post:
-      summary: ''
-      operationId: postApiSwipes
-      description: ''
+      summary: 'Store Swipe'
+      operationId: storeSwipe
+      description: 'Stores a swipe for the authenticated user.'
       parameters: []
-      responses: {  }
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  swipee_id: 08e1608c-eb31-4623-bde6-b63646daecf9
+                  swiper_id: 98cca5ca-ca31-4031-a41b-241dc0876d5f
+                  direction: right
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  swipee_id:
+                    type: string
+                    example: 08e1608c-eb31-4623-bde6-b63646daecf9
+                  swiper_id:
+                    type: string
+                    example: 98cca5ca-ca31-4031-a41b-241dc0876d5f
+                  direction:
+                    type: string
+                    example: right
       tags:
         - Endpoints
       requestBody:
@@ -151,28 +208,32 @@ paths:
               properties:
                 swipee_id:
                   type: string
-                  description: 'Must be a valid UUID. The <code>id</code> of an existing record in the users table.'
-                  example: 6ff8f7f6-1eb3-3525-be4a-3932c805afed
+                  description: 'The ID of the user being swiped on.'
+                  example: architecto
                   nullable: false
                 direction:
                   type: string
-                  description: ''
-                  example: left
+                  description: 'The direction of the swipe (left or right).'
+                  example: architecto
                   nullable: false
-                  enum:
-                    - left
-                    - right
               required:
                 - swipee_id
                 - direction
       security: []
   /api/auth/register:
     post:
-      summary: ''
-      operationId: postApiAuthRegister
-      description: ''
+      summary: Register
+      operationId: register
+      description: 'Registers a new user.'
       parameters: []
-      responses: {  }
+      responses:
+        201:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: '{ token: "token", user_id: "08e1608c-eb31-4623-bde6-b63646daecf9" }'
       tags:
         - Endpoints
       requestBody:
@@ -184,33 +245,38 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
-                  example: b
+                  description: 'The name of the user.'
+                  example: architecto
                   nullable: false
                 email:
                   type: string
-                  description: 'Must be a valid email address. Must not be greater than 255 characters.'
-                  example: zbailey@example.net
+                  description: 'The email of the user.'
+                  example: gbailey@example.net
                   nullable: false
                 password:
                   type: string
-                  description: 'Must be at least 8 characters.'
-                  example: '-0pBNvYgxw'
+                  description: 'The password of the user.'
+                  example: '|]|{+-'
                   nullable: false
                 device_name:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
-                  example: a
+                  description: 'The name of the device.'
+                  example: architecto
                   nullable: false
                 latitude:
                   type: number
-                  description: ''
+                  description: 'The latitude of the user.'
                   example: 4326.41688
                   nullable: false
                 longitude:
                   type: number
-                  description: ''
+                  description: 'The longitude of the user.'
                   example: 4326.41688
+                  nullable: false
+                password_confirmation:
+                  type: string
+                  description: 'The password confirmation of the user.'
+                  example: architecto
                   nullable: false
               required:
                 - name
@@ -219,14 +285,22 @@ paths:
                 - device_name
                 - latitude
                 - longitude
+                - password_confirmation
       security: []
   /api/auth/login:
     post:
-      summary: ''
-      operationId: postApiAuthLogin
-      description: ''
+      summary: Login
+      operationId: login
+      description: 'Logs in a user.'
       parameters: []
-      responses: {  }
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: '{ token: "token", user_id: "08e1608c-eb31-4623-bde6-b63646daecf9" }'
       tags:
         - Endpoints
       requestBody:
@@ -238,17 +312,17 @@ paths:
               properties:
                 email:
                   type: string
-                  description: 'Must be a valid email address.'
+                  description: 'The email of the user.'
                   example: gbailey@example.net
                   nullable: false
                 password:
                   type: string
-                  description: ''
-                  example: architecto
+                  description: 'The password of the user.'
+                  example: '|]|{+-'
                   nullable: false
                 device_name:
                   type: string
-                  description: ''
+                  description: 'The name of the device.'
                   example: architecto
                   nullable: false
               required:

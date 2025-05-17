@@ -7,9 +7,13 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\StoreSwipeController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('health', function () {
-    return response()->json(['status' => 'ok']);
-})->name('health');
+/**
+ * Health
+ *
+ * Checks that the API is up and running.
+ * @response 200 scenario="API is up and running" { "status": "ok" }
+ */
+Route::get('health', fn() => response()->json(['status' => 'ok']))->name('health');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('users')->name('users.')->group(function () {
@@ -26,6 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::prefix('auth')->name('auth.')->group(function () {
+
     Route::post('register', RegisterController::class)->name('register');
     Route::post('login', LoginController::class)->name('login');
 });

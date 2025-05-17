@@ -32,4 +32,24 @@ class GetNearbyUsersTest extends TestCase
             ],
         ]);
     }
+
+    public function test_it_uses_auth_user_if_no_coordinates_provided()
+    {
+        $expectedUser = User::factory()->create([
+            'location' => Point::makeGeodetic(43.4735, -80.51456),
+        ]);
+
+        $otherUser = User::factory()->create([
+            'location' => Point::makeGeodetic(44.47734, -81.51496),
+        ]);
+
+        $this->actingAs($otherUser)->get(route('users.nearby', [
+            'distance' => 50,
+        ]))->assertOk()->assertJson([
+            [
+                'id'       => $expectedUser->getKey(),
+                'distance' => 428.20726285,
+            ],
+        ]);
+    }
 }

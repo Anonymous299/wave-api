@@ -11,6 +11,21 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RegisterController extends Controller
 {
+    /**
+     * Register
+     *
+     * Registers a new user.
+     *
+     * @bodyParam name string required The name of the user.
+     * @bodyParam email string required The email of the user.
+     * @bodyParam password string required The password of the user.
+     * @bodyParam password_confirmation string required The password confirmation of the user.
+     * @bodyParam device_name string required The name of the device.
+     * @bodyParam latitude float required The latitude of the user.
+     * @bodyParam longitude float required The longitude of the user.
+     *
+     * @response 201 { token: "token", user_id: "08e1608c-eb31-4623-bde6-b63646daecf9" }
+     */
     public function __invoke(Request $request): JsonResponse
     {
         $request->validate([

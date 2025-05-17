@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "wave-api API Documentation",
-        "_postman_id": "4d755629-20b3-4a9d-8557-66f1b9747644",
+        "_postman_id": "d10e04da-c56a-4433-9772-b7809ad41a52",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -20,7 +20,7 @@
             "description": "",
             "item": [
                 {
-                    "name": "GET api\/health",
+                    "name": "Health",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -40,41 +40,47 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
+                        "description": "Checks that the API is up and running.",
                         "auth": {
                             "type": "noauth"
                         }
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
+                            "header": [],
                             "code": 200,
-                            "body": "{\"status\":\"ok\"}",
-                            "name": ""
+                            "body": "{ \"status\": \"ok\" }",
+                            "name": "API is up and running"
                         }
                     ]
                 },
                 {
-                    "name": "GET api\/users\/nearby",
+                    "name": "Get Nearby Users",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
                             "path": "api\/users\/nearby",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/users\/nearby"
+                            "query": [
+                                {
+                                    "key": "latitude",
+                                    "value": "4326.41688",
+                                    "description": "The latitude of the user's location.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "longitude",
+                                    "value": "4326.41688",
+                                    "description": "The longitude of the user's location.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "distance",
+                                    "value": "4326.41688",
+                                    "description": "The distance in kilometers to search for users.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/users\/nearby?latitude=4326.41688&longitude=4326.41688&distance=4326.41688"
                         },
                         "method": "GET",
                         "header": [
@@ -91,29 +97,16 @@
                             "mode": "raw",
                             "raw": "{\"latitude\":4326.41688,\"longitude\":4326.41688,\"distance\":17}"
                         },
-                        "description": "",
+                        "description": "Retrieves users within a specified distance from the given latitude and longitude.\nIf latitude and longitude are not provided, the auth'd user's location will be used.\n\nthese are query params",
                         "auth": {
                             "type": "noauth"
                         }
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
-                            "code": 401,
-                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"users\": [\n    {id: \"98cca5ca-ca31-4031-a41b-241dc0876d5f\" name: \"John Doe\" distance: 1234},\n  ]",
                             "name": ""
                         }
                     ]
@@ -167,7 +160,7 @@
                     ]
                 },
                 {
-                    "name": "POST api\/users\/location",
+                    "name": "Change User Location",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -190,15 +183,22 @@
                             "mode": "raw",
                             "raw": "{\"latitude\":4326.41688,\"longitude\":4326.41688}"
                         },
-                        "description": "",
+                        "description": "Updates the location of the authenticated user.",
                         "auth": {
                             "type": "noauth"
                         }
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Location updated successfully.\"\n  \"user_id\": \"08e1608c-eb31-4623-bde6-b63646daecf9\",\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "POST api\/swipes",
+                    "name": "Store Swipe",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -219,17 +219,24 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"swipee_id\":\"6ff8f7f6-1eb3-3525-be4a-3932c805afed\",\"direction\":\"left\"}"
+                            "raw": "{\"swipee_id\":\"architecto\",\"direction\":\"architecto\"}"
                         },
-                        "description": "",
+                        "description": "Stores a swipe for the authenticated user.",
                         "auth": {
                             "type": "noauth"
                         }
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n\"id\": 1,\n\"swipee_id\": \"08e1608c-eb31-4623-bde6-b63646daecf9\",\n\"swiper_id\": \"98cca5ca-ca31-4031-a41b-241dc0876d5f\",\n\"direction\": \"right\"\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "POST api\/auth\/register",
+                    "name": "Register",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -250,17 +257,24 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"email\":\"zbailey@example.net\",\"password\":\"-0pBNvYgxw\",\"device_name\":\"a\",\"latitude\":4326.41688,\"longitude\":4326.41688}"
+                            "raw": "{\"name\":\"architecto\",\"email\":\"gbailey@example.net\",\"password\":\"|]|{+-\",\"device_name\":\"architecto\",\"latitude\":4326.41688,\"longitude\":4326.41688,\"password_confirmation\":\"architecto\"}"
                         },
-                        "description": "",
+                        "description": "Registers a new user.",
                         "auth": {
                             "type": "noauth"
                         }
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{ token: \"token\", user_id: \"08e1608c-eb31-4623-bde6-b63646daecf9\" }",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "POST api\/auth\/login",
+                    "name": "Login",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -281,14 +295,21 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"email\":\"gbailey@example.net\",\"password\":\"architecto\",\"device_name\":\"architecto\"}"
+                            "raw": "{\"email\":\"gbailey@example.net\",\"password\":\"|]|{+-\",\"device_name\":\"architecto\"}"
                         },
-                        "description": "",
+                        "description": "Logs in a user.",
                         "auth": {
                             "type": "noauth"
                         }
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ token: \"token\", user_id: \"08e1608c-eb31-4623-bde6-b63646daecf9\" }",
+                            "name": ""
+                        }
+                    ]
                 }
             ]
         }
