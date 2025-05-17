@@ -33,7 +33,8 @@ class RegisterController extends Controller
         ]);
 
         return response()->json([
-            'token' => $user->createToken($request->device_name)->plainTextToken,
+            'token'   => $user->createToken($request->device_name)->plainTextToken,
+            'user_id' => $user->getKey(),
         ], Response::HTTP_CREATED);
     }
 }
