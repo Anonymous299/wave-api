@@ -17,11 +17,11 @@ class GetNearbyUsersTest extends TestCase
             'location' => Point::makeGeodetic(43.4735, -80.51456),
         ]);
 
-        User::factory()->create([
+        $otherUser = User::factory()->create([
             'location' => Point::makeGeodetic(44.47734, -81.51496),
         ]);
 
-        $this->get(route('users.nearby', [
+        $this->actingAs($otherUser)->get(route('users.nearby', [
             'latitude'  => 43.47734,
             'longitude' => -80.51496,
             'distance'  => 50,
