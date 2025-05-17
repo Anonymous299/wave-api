@@ -1,6 +1,6 @@
 <?php
 
-namespace Feature\Controllers;
+namespace Tests\Feature\Controllers;
 
 use App\Models\User;
 use Clickbar\Magellan\Data\Geometries\Point;
@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
-class RegisterController extends TestCase
+class RegisterControllerTest extends TestCase
 {
     use RefreshDatabase;
 

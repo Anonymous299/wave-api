@@ -1,6 +1,6 @@
 <?php
 
-namespace Feature\Controllers;
+namespace Tests\Feature\Controllers;
 
 use App\Models\User;
 use Clickbar\Magellan\Data\Geometries\Point;
