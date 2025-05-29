@@ -107,6 +107,48 @@ paths:
               required:
                 - distance
       security: []
+  /api/users/nearby/count:
+    get:
+      summary: ''
+      operationId: getApiUsersNearbyCount
+      description: ''
+      parameters:
+        -
+          in: query
+          name: distance
+          description: 'The distance in kilometers to search for users.'
+          example: 4326.41688
+          required: true
+          schema:
+            type: number
+            description: 'The distance in kilometers to search for users.'
+            example: 4326.41688
+            nullable: false
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n \"count\": 5,\n \"distance\": 50,\n \"origin\": {\n   \"latitude\": 43.4779751,\n   \"longitude\": -80.5197298\n }"
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                distance:
+                  type: number
+                  description: 'Must be at least 1. Must not be greater than 1000.'
+                  example: 1
+                  nullable: false
+              required:
+                - distance
+      security: []
   /api/users/location:
     post:
       summary: 'Change User Location'

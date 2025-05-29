@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChangeUserLocationController;
+use App\Http\Controllers\GetNearbyUserCount;
 use App\Http\Controllers\GetNearbyUsers;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
@@ -18,6 +19,8 @@ Route::get('health', fn() => response()->json(['status' => 'ok']))->name('health
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('users')->name('users.')->group(function () {
         Route::get('nearby', GetNearbyUsers::class)->name('nearby');
+        Route::get('nearby/count', GetNearbyUserCount::class)->name('nearby.count');
+
         Route::get('me', fn() => response()->json(auth()->user()))->name('me');
 
         Route::post('location', ChangeUserLocationController::class)

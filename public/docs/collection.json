@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "wave-api API Documentation",
-        "_postman_id": "126f4433-4cec-40b0-b820-a4d29d162b31",
+        "_postman_id": "4c19b289-f382-47f5-8b30-eb814fdd4de8",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -107,6 +107,51 @@
                             "header": [],
                             "code": 200,
                             "body": "{\n  \"users\": [\n    {id: \"98cca5ca-ca31-4031-a41b-241dc0876d5f\" name: \"John Doe\" distance: 1234},\n  ]",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET api\/users\/nearby\/count",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users\/nearby\/count",
+                            "query": [
+                                {
+                                    "key": "distance",
+                                    "value": "4326.41688",
+                                    "description": "The distance in kilometers to search for users.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/users\/nearby\/count?distance=4326.41688"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"distance\":1}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"count\": 5,\n \"distance\": 50,\n \"origin\": {\n   \"latitude\": 43.4779751,\n   \"longitude\": -80.5197298\n }",
                             "name": ""
                         }
                     ]
