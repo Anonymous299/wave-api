@@ -107,28 +107,6 @@ paths:
               required:
                 - distance
       security: []
-  /api/users/me:
-    get:
-      summary: ''
-      operationId: getApiUsersMe
-      description: ''
-      parameters: []
-      responses:
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: Unauthenticated.
-                properties:
-                  message:
-                    type: string
-                    example: Unauthenticated.
-      tags:
-        - Endpoints
-      security: []
   /api/users/location:
     post:
       summary: 'Change User Location'

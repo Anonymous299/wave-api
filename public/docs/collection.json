@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "wave-api API Documentation",
-        "_postman_id": "d10e04da-c56a-4433-9772-b7809ad41a52",
+        "_postman_id": "126f4433-4cec-40b0-b820-a4d29d162b31",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -107,54 +107,6 @@
                             "header": [],
                             "code": 200,
                             "body": "{\n  \"users\": [\n    {id: \"98cca5ca-ca31-4031-a41b-241dc0876d5f\" name: \"John Doe\" distance: 1234},\n  ]",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "GET api\/users\/me",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/users\/me",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/users\/me"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": [
-                        {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "access-control-allow-origin",
-                                    "value": "*"
-                                }
-                            ],
-                            "code": 401,
-                            "body": "{\"message\":\"Unauthenticated.\"}",
                             "name": ""
                         }
                     ]

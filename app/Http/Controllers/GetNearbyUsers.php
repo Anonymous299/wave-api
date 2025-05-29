@@ -34,12 +34,14 @@ class GetNearbyUsers extends Controller
             'distance'  => 'required|numeric|min:1|max:1000',
         ]);
 
-        // TODO -- handle the case where no lat/lon is provided
+        /** @var User $authUser */
+        $authUser = auth()->user();
+
         $distanceInKm = $request->input('distance');
-        $origin = Point::makeGeodetic(
+        $origin = $request->input('latitude') !== null ? Point::makeGeodetic(
             $request->input('latitude'),
             $request->input('longitude')
-        );
+        ) : $authUser->location;
 
         return User::query()
             ->select()
@@ -51,6 +53,7 @@ class GetNearbyUsers extends Controller
             ->where(
                 ST::distanceSphere($origin, 'location'), '<=', $distanceInKm * 1000
             )
+            ->where('id', '!=', $authUser->getKey())
             ->orderBy('distance')
             ->get()
             ->map(fn($user) => [
