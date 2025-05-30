@@ -36,7 +36,7 @@ class GetNearbyUsersTest extends TestCase
         ]))->assertOk()->assertJson([
             [
                 'id'       => $expectedUser->getKey(),
-                'distance' => self::EXPECTED_DISTANCE,
+                'distance' => self::EXPECTED_DISTANCE / 1000,
             ],
         ]);
     }
@@ -69,7 +69,7 @@ class GetNearbyUsersTest extends TestCase
         ]))->assertOk()->assertJson([
             [
                 'id'       => $otherUser->getKey(),
-                'distance' => self::EXPECTED_DISTANCE,
+                'distance' => self::EXPECTED_DISTANCE/ 1000,
             ],
         ]);
     }

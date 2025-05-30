@@ -58,7 +58,7 @@ class GetNearbyUsers extends Controller
             ->get()
             ->map(fn($user) => [
                 ...$user->toArray(),
-                'distance' => $user->distance,
+                'distance' => $user->distance / 1000,
             ]);
     }
 }
