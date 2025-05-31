@@ -17,7 +17,7 @@ class GetNearbyUsersTest extends TestCase
     private const TEST_LAT_B = 43.470105;
     private const TEST_LNG_B = -80.512739;
 
-    private const EXPECTED_DISTANCE = 1041.17488371; // Distance in meters
+    private const EXPECTED_DISTANCE = 1041.17488371 / 1000; // Distance in meters
 
     public function test_it_gets_nearby_users()
     {
@@ -36,7 +36,7 @@ class GetNearbyUsersTest extends TestCase
         ]))->assertOk()->assertJson([
             [
                 'id'       => $expectedUser->getKey(),
-                'distance' => self::EXPECTED_DISTANCE / 1000,
+                'distance' => self::EXPECTED_DISTANCE
             ],
         ]);
     }
@@ -69,7 +69,7 @@ class GetNearbyUsersTest extends TestCase
         ]))->assertOk()->assertJson([
             [
                 'id'       => $otherUser->getKey(),
-                'distance' => self::EXPECTED_DISTANCE/ 1000,
+                'distance' => self::EXPECTED_DISTANCE
             ],
         ]);
     }
