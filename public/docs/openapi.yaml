@@ -221,7 +221,7 @@ paths:
             text/plain:
               schema:
                 type: string
-                example: "{\n    \"swipe\": {\n        \"id\": \"12345\",\n        \"swipee_id\": \"08e1608c-eb31-4623-bde6-b63646daecf9\",\n        \"direction\": \"right\",\n        \"created_at\": \"2023-10-01T12:00:00Z\",\n    },\n   \"match\": true\n}"
+                example: "{\n    \"swipe\": {\n        \"id\": \"12345\",\n        \"swipee_id\": \"08e1608c-eb31-4623-bde6-b63646daecf9\",\n        \"direction\": \"right\",\n        \"created_at\": \"2023-10-01T12:00:00Z\",\n    },\n   \"match\": true\n   \"chat_id\": \"58c8f668-e178-481c-94c4-28eb1e9b133b\"\n}"
       tags:
         - Endpoints
       requestBody:

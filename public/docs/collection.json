@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "wave-api API Documentation",
-        "_postman_id": "aeb5cf7a-e9c3-4638-aa85-94eb8ba5791a",
+        "_postman_id": "40bad507-669a-4a31-89e9-f8a7d09abbc1",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -275,7 +275,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n    \"swipe\": {\n        \"id\": \"12345\",\n        \"swipee_id\": \"08e1608c-eb31-4623-bde6-b63646daecf9\",\n        \"direction\": \"right\",\n        \"created_at\": \"2023-10-01T12:00:00Z\",\n    },\n   \"match\": true\n}",
+                            "body": "{\n    \"swipe\": {\n        \"id\": \"12345\",\n        \"swipee_id\": \"08e1608c-eb31-4623-bde6-b63646daecf9\",\n        \"direction\": \"right\",\n        \"created_at\": \"2023-10-01T12:00:00Z\",\n    },\n   \"match\": true\n   \"chat_id\": \"58c8f668-e178-481c-94c4-28eb1e9b133b\"\n}",
                             "name": ""
                         }
                     ]

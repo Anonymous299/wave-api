@@ -27,6 +27,7 @@ class StoreSwipeController extends Controller
      *         "created_at": "2023-10-01T12:00:00Z",
      *     },
      *    "match": true
+     *    "chat_id": "58c8f668-e178-481c-94c4-28eb1e9b133b"
      * }
      */
     public function __invoke(Request $request): JsonResponse
