@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Models\Chat;
 use App\Models\Swipe;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -68,10 +69,15 @@ class StoreSwipeControllerTest extends TestCase
         $this->actingAs($swiper)->postJson('/api/swipes', [
             'swipee_id' => $swipee->getKey(),
             'direction' => 'right',
-        ])->assertCreated()
-            ->assertJson([
-                'match' => true,
-            ]);
+        ])->assertCreated()->assertJson([
+            'match'   => true,
+            'chat_id' => Chat::query()->firstOrFail()->getKey(),
+        ]);
+
+        $this->assertDatabaseHas('chats', [
+            'user_one_id' => $swiper->getKey(),
+            'user_two_id' => $swipee->getKey(),
+        ]);
     }
 
     public static function provideInvalidParameters(): array

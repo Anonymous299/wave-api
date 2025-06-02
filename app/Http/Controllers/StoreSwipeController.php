@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chat;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,9 +43,17 @@ class StoreSwipeController extends Controller
                 'direction' => $request->direction,
             ]);
 
+        $chat = Chat::query()
+            ->where('user_one_id', $swipe->swiper_id)
+            ->where('user_two_id', $swipe->swipee_id)->first()
+            ?? Chat::query()
+                ->where('user_two_id', $swipe->swiper_id)
+                ->where('user_one_id', $swipe->swipee_id)->first();
+
         return response()->json([
-            'swipe' => $swipe->toArray(),
-            'match' => $swipe->isMatch(),
+            'swipe'   => $swipe->toArray(),
+            'match'   => $swipe->isMatch(),
+            'chat_id' => $chat?->getKey(),
         ], Response::HTTP_CREATED);
     }
 }
