@@ -149,6 +149,28 @@ paths:
               required:
                 - distance
       security: []
+  /api/users/me:
+    get:
+      summary: ''
+      operationId: getApiUsersMe
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
   /api/users/location:
     post:
       summary: 'Change User Location'
@@ -508,6 +530,133 @@ paths:
         required: true
         schema:
           type: string
+  '/api/chats/{chat_id}/messages':
+    get:
+      summary: 'List Messages in Chat'
+      operationId: listMessagesInChat
+      description: 'Returns a paginated list of messages for a specific chat.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: 62b8d8e3-4f24-4a1e-b0a1-9e7b2cb81a1b
+                      body: 'Hey there!'
+                      sender_id: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+                      chat_id: 7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b
+                      created_at: '2025-06-02T12:05:00Z'
+                  links:
+                    first: 'http://localhost/api/chats/7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b/messages?page=1'
+                    last: 'http://localhost/api/chats/7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b/messages?page=1'
+                    prev: null
+                    next: null
+                  meta:
+                    current_page: 1
+                    from: 1
+                    last_page: 1
+                    path: 'http://localhost/api/chats/7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b/messages'
+                    per_page: 25
+                    to: 1
+                    total: 1
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 62b8d8e3-4f24-4a1e-b0a1-9e7b2cb81a1b
+                        body: 'Hey there!'
+                        sender_id: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+                        chat_id: 7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b
+                        created_at: '2025-06-02T12:05:00Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 62b8d8e3-4f24-4a1e-b0a1-9e7b2cb81a1b
+                        body:
+                          type: string
+                          example: 'Hey there!'
+                        sender_id:
+                          type: string
+                          example: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+                        chat_id:
+                          type: string
+                          example: 7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b
+                        created_at:
+                          type: string
+                          example: '2025-06-02T12:05:00Z'
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: 'http://localhost/api/chats/7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b/messages?page=1'
+                      last:
+                        type: string
+                        example: 'http://localhost/api/chats/7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b/messages?page=1'
+                      prev:
+                        type: string
+                        example: null
+                      next:
+                        type: string
+                        example: null
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      from:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 1
+                      path:
+                        type: string
+                        example: 'http://localhost/api/chats/7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b/messages'
+                      per_page:
+                        type: integer
+                        example: 25
+                      to:
+                        type: integer
+                        example: 1
+                      total:
+                        type: integer
+                        example: 1
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: chat_id
+        description: 'The ID of the chat.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: chat
+        description: 'Optional parameter. uuid required The UUID of the chat.'
+        required: true
+        schema:
+          type: string
+        examples:
+          omitted:
+            summary: 'When the value is omitted'
+            value: ''
+          present:
+            summary: 'When the value is present'
+            value: 7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b
   /api/auth/register:
     post:
       summary: Register

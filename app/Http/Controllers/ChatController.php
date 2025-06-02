@@ -93,6 +93,40 @@ class ChatController extends Controller
         return ChatResource::collection($user->chats()->paginate(25));
     }
 
+    /**
+     * List Messages in Chat
+     *
+     * Returns a paginated list of messages for a specific chat.
+     *
+     * @urlParam chat uuid required The UUID of the chat. Example: 7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b
+     *
+     * @response 200 {
+     *   "data": [
+     *     {
+     *       "id": "62b8d8e3-4f24-4a1e-b0a1-9e7b2cb81a1b",
+     *       "body": "Hey there!",
+     *       "sender_id": "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+     *       "chat_id": "7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b",
+     *       "created_at": "2025-06-02T12:05:00Z"
+     *     }
+     *   ],
+     *   "links": {
+     *     "first": "http://localhost/api/chats/7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b/messages?page=1",
+     *     "last": "http://localhost/api/chats/7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b/messages?page=1",
+     *     "prev": null,
+     *     "next": null
+     *   },
+     *   "meta": {
+     *     "current_page": 1,
+     *     "from": 1,
+     *     "last_page": 1,
+     *     "path": "http://localhost/api/chats/7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b/messages",
+     *     "per_page": 25,
+     *     "to": 1,
+     *     "total": 1
+     *   }
+     * }
+     */
     public function messages(Chat $chat): AnonymousResourceCollection
     {
         return MessageResource::collection($chat->messages()->paginate(25));
