@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "wave-api API Documentation",
-        "_postman_id": "4c19b289-f382-47f5-8b30-eb814fdd4de8",
+        "_postman_id": "34d383c1-1d57-45d9-94fe-2be8ad2798ff",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -216,9 +216,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"swipee_id\":\"architecto\",\"direction\":\"architecto\"}"
+                            "raw": "{\"swipee_id\":\"08e1608c-eb31-4623-bde6-b63646daecf9\",\"direction\":\"right\"}"
                         },
-                        "description": "Stores a swipe for the authenticated user.",
+                        "description": "Stores a swipe for the authenticated user. Returns the swipe as an object and a match key to indicate if\nthe swipe resulted in a match.",
                         "auth": {
                             "type": "noauth"
                         }
@@ -226,8 +226,8 @@
                     "response": [
                         {
                             "header": [],
-                            "code": 201,
-                            "body": "{\n\"id\": 1,\n\"swipee_id\": \"08e1608c-eb31-4623-bde6-b63646daecf9\",\n\"swiper_id\": \"98cca5ca-ca31-4031-a41b-241dc0876d5f\",\n\"direction\": \"right\"\n}",
+                            "code": 200,
+                            "body": "{\n    \"swipe\": {\n        \"id\": \"12345\",\n        \"swipee_id\": \"08e1608c-eb31-4623-bde6-b63646daecf9\",\n        \"direction\": \"right\",\n        \"created_at\": \"2023-10-01T12:00:00Z\",\n    },\n   \"match\": true\n}",
                             "name": ""
                         }
                     ]

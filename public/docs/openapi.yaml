@@ -190,33 +190,16 @@ paths:
     post:
       summary: 'Store Swipe'
       operationId: storeSwipe
-      description: 'Stores a swipe for the authenticated user.'
+      description: "Stores a swipe for the authenticated user. Returns the swipe as an object and a match key to indicate if\nthe swipe resulted in a match."
       parameters: []
       responses:
-        201:
+        200:
           description: ''
           content:
-            application/json:
+            text/plain:
               schema:
-                type: object
-                example:
-                  id: 1
-                  swipee_id: 08e1608c-eb31-4623-bde6-b63646daecf9
-                  swiper_id: 98cca5ca-ca31-4031-a41b-241dc0876d5f
-                  direction: right
-                properties:
-                  id:
-                    type: integer
-                    example: 1
-                  swipee_id:
-                    type: string
-                    example: 08e1608c-eb31-4623-bde6-b63646daecf9
-                  swiper_id:
-                    type: string
-                    example: 98cca5ca-ca31-4031-a41b-241dc0876d5f
-                  direction:
-                    type: string
-                    example: right
+                type: string
+                example: "{\n    \"swipe\": {\n        \"id\": \"12345\",\n        \"swipee_id\": \"08e1608c-eb31-4623-bde6-b63646daecf9\",\n        \"direction\": \"right\",\n        \"created_at\": \"2023-10-01T12:00:00Z\",\n    },\n   \"match\": true\n}"
       tags:
         - Endpoints
       requestBody:
@@ -229,12 +212,12 @@ paths:
                 swipee_id:
                   type: string
                   description: 'The ID of the user being swiped on.'
-                  example: architecto
+                  example: 08e1608c-eb31-4623-bde6-b63646daecf9
                   nullable: false
                 direction:
                   type: string
                   description: 'The direction of the swipe (left or right).'
-                  example: architecto
+                  example: right
                   nullable: false
               required:
                 - swipee_id

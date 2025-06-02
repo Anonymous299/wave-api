@@ -103,7 +103,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: May 29, 2025</li>
+        <li>Last updated: June 2, 2025</li>
     </ul>
 </div>
 
@@ -769,7 +769,8 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>
 </p>
 
-<p>Stores a swipe for the authenticated user.</p>
+<p>Stores a swipe for the authenticated user. Returns the swipe as an object and a match key to indicate if
+the swipe resulted in a match.</p>
 
 <span id="example-requests-POSTapi-swipes">
 <blockquote>Example request:</blockquote>
@@ -781,8 +782,8 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"swipee_id\": \"architecto\",
-    \"direction\": \"architecto\"
+    \"swipee_id\": \"08e1608c-eb31-4623-bde6-b63646daecf9\",
+    \"direction\": \"right\"
 }"
 </code></pre></div>
 
@@ -798,8 +799,8 @@ const headers = {
 };
 
 let body = {
-    "swipee_id": "architecto",
-    "direction": "architecto"
+    "swipee_id": "08e1608c-eb31-4623-bde6-b63646daecf9",
+    "direction": "right"
 };
 
 fetch(url, {
@@ -812,15 +813,18 @@ fetch(url, {
 
 <span id="example-responses-POSTapi-swipes">
             <blockquote>
-            <p>Example response (201):</p>
+            <p>Example response (200):</p>
         </blockquote>
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;id&quot;: 1,
-    &quot;swipee_id&quot;: &quot;08e1608c-eb31-4623-bde6-b63646daecf9&quot;,
-    &quot;swiper_id&quot;: &quot;98cca5ca-ca31-4031-a41b-241dc0876d5f&quot;,
-    &quot;direction&quot;: &quot;right&quot;
+    &quot;swipe&quot;: {
+        &quot;id&quot;: &quot;12345&quot;,
+        &quot;swipee_id&quot;: &quot;08e1608c-eb31-4623-bde6-b63646daecf9&quot;,
+        &quot;direction&quot;: &quot;right&quot;,
+        &quot;created_at&quot;: &quot;2023-10-01T12:00:00Z&quot;,
+    },
+   &quot;match&quot;: true
 }</code>
  </pre>
     </span>
@@ -900,10 +904,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="swipee_id"                data-endpoint="POSTapi-swipes"
-               value="architecto"
+               value="08e1608c-eb31-4623-bde6-b63646daecf9"
                data-component="body">
     <br>
-<p>The ID of the user being swiped on. Example: <code>architecto</code></p>
+<p>The ID of the user being swiped on. Example: <code>08e1608c-eb31-4623-bde6-b63646daecf9</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>direction</code></b>&nbsp;&nbsp;
@@ -911,10 +915,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="direction"                data-endpoint="POSTapi-swipes"
-               value="architecto"
+               value="right"
                data-component="body">
     <br>
-<p>The direction of the swipe (left or right). Example: <code>architecto</code></p>
+<p>The direction of the swipe (left or right). Example: <code>right</code></p>
         </div>
         </form>
 

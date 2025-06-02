@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Models\Swipe;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
@@ -23,6 +24,10 @@ class StoreSwipeControllerTest extends TestCase
         ]);
 
         $response->assertCreated();
+        $response->assertJson([
+            'swipe' => Swipe::query()->first()->toArray(),
+            'match' => false,
+        ]);
 
         $this->assertDatabaseHas('swipes', [
             'swiper_id' => $swiper->getKey(),
@@ -47,6 +52,26 @@ class StoreSwipeControllerTest extends TestCase
             'swiper_id' => $swiper->getKey(),
             'swipee_id' => $swipee->getKey(),
         ]);
+    }
+
+    public function test_it_returns_true_if_match_created()
+    {
+        $swiper = User::factory()->create();
+        $swipee = User::factory()->create();
+
+        Swipe::factory()->create([
+            'swiper_id' => $swipee->getKey(),
+            'swipee_id' => $swiper->getKey(),
+            'direction' => 'right',
+        ]);
+
+        $this->actingAs($swiper)->postJson('/api/swipes', [
+            'swipee_id' => $swipee->getKey(),
+            'direction' => 'right',
+        ])->assertCreated()
+            ->assertJson([
+                'match' => true,
+            ]);
     }
 
     public static function provideInvalidParameters(): array
