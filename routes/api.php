@@ -5,6 +5,7 @@ use App\Http\Controllers\GetNearbyUserCount;
 use App\Http\Controllers\GetNearbyUsers;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\StoreMessageController;
 use App\Http\Controllers\StoreSwipeController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('swipes')->name('swipes.')->group(function () {
         Route::post('/', StoreSwipeController::class)->name('store');
+    });
+
+    Route::prefix('messages')->name('messages.')->group(function () {
+        Route::post('/', StoreMessageController::class)->name('store');
     });
 });
 
