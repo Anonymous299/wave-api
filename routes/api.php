@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChangeUserLocationController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\GetNearbyUserCount;
 use App\Http\Controllers\GetNearbyUsers;
 use App\Http\Controllers\LoginController;
@@ -34,6 +35,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('messages')->name('messages.')->group(function () {
         Route::post('/', StoreMessageController::class)->name('store');
+    });
+
+    Route::prefix('chats')->name('chats.')->group(function () {
+        Route::get('/', [ChatController::class, 'index'])->name('index');
+
+        Route::get('{chat}', [ChatController::class, 'get'])->name('show');
     });
 });
 
