@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -44,10 +45,12 @@ class StoreMessageController extends Controller
         /* @var User $user */
         $user = auth()->user();
         $chat = $user->chats()->findOrFail($request->input('chat_id'));
-        $chat->messages()->create([
+        $message = $chat->messages()->create([
             'sender_id' => $user->getKey(),
             'body' => $request->input('body'),
         ]);
+
+        MessageSent::dispatch($message);
 
         return response()->json(
             ['message' => 'Message stored successfully.'],

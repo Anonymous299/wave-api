@@ -2,9 +2,11 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Events\MessageSent;
 use App\Models\Chat;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -12,8 +14,10 @@ class StoreMessageControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_it_stores_message()
+    public function test_it_stores_message_and_broadcasts_event()
     {
+        Event::fake();
+
         $userOne = User::factory()->create();
         $userTwo = User::factory()->create();
 
@@ -24,15 +28,22 @@ class StoreMessageControllerTest extends TestCase
 
         $response = $this->actingAs($userOne)->postJson('/api/messages', [
             'chat_id' => $chat->getKey(),
-            'body' => 'Hello, world.',
+            'body'    => 'Hello, world.',
         ]);
 
         $response->assertCreated();
         $this->assertDatabaseHas('messages', [
-            'chat_id' => $chat->getKey(),
+            'chat_id'   => $chat->getKey(),
             'sender_id' => $userOne->getKey(),
-            'body' => 'Hello, world.',
+            'body'      => 'Hello, world.',
         ]);
+
+        Event::assertDispatched(
+            MessageSent::class,
+            fn($event) => $event->message->chat_id === $chat->getKey()
+                && $event->message->sender_id === $userOne->getKey()
+                && $event->message->body === 'Hello, world.'
+        );
     }
 
     /**
@@ -58,12 +69,12 @@ class StoreMessageControllerTest extends TestCase
 
         $this->actingAs($user)->postJson('/api/messages', [
             'chat_id' => $unrelatedChat->getKey(),
-            'body' => 'Nope',
+            'body'    => 'Nope',
         ])->assertNotFound();
 
         $this->assertDatabaseMissing('messages', [
             'chat_id' => $unrelatedChat->getKey(),
-            'body' => 'Nope',
+            'body'    => 'Nope',
         ]);
     }
 
@@ -71,8 +82,8 @@ class StoreMessageControllerTest extends TestCase
     {
         return [
             'missing chat_id' => [['body' => 'Hello']],
-            'missing message' => [['chat_id' => (string) Str::uuid()]],
-            'empty message'   => [['chat_id' => (string) Str::uuid(), 'body' => '']],
+            'missing message' => [['chat_id' => (string)Str::uuid()]],
+            'empty message'   => [['chat_id' => (string)Str::uuid(), 'body' => '']],
             'invalid chat_id' => [['chat_id' => 'not-a-uuid', 'body' => 'Test']],
         ];
     }
