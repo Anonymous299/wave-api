@@ -38,9 +38,8 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('chats')->name('chats.')->group(function () {
+        Route::get('/{chat}', [ChatController::class, 'get'])->name('get');
         Route::get('/', [ChatController::class, 'index'])->name('index');
-
-        Route::get('{chat}', [ChatController::class, 'get'])->name('show');
     });
 });
 

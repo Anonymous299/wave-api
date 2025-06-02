@@ -18,20 +18,17 @@ class ChatsControllerTest extends TestCase
         $userOne = User::factory()->create();
         $userTwo = User::factory()->create();
 
-        $chat = Chat::query()->create([
+        $chat = Chat::create([
             'user_one_id' => $userOne->getKey(),
             'user_two_id' => $userTwo->getKey(),
         ]);
 
-        $chatMessages = collect([1, 2, 3, 4, 5])
-            ->map(fn() => $chat->messages()->create([
-                'sender_id' => $userOne->getKey(),
-                'body'      => 'snickers',
-            ]));
+        collect(range(1, 5))->each(fn () => $chat->messages()->create([
+            'sender_id' => $userOne->getKey(),
+            'body'      => 'snickers',
+        ]));
 
-
-
-        $response = $this->actingAs($userOne)->getJson('/api/chats?chat_id=' . $chat->getKey());
+        $response = $this->actingAs($userOne)->getJson("/api/chats/{$chat->getKey()}");
 
         $response
             ->assertOk()
@@ -47,32 +44,60 @@ class ChatsControllerTest extends TestCase
                 ],
             ]);
 
-        $response = json_decode($response->content());
-        $this->assertEquals(Carbon::parse($response->created_at), $chat->created_at);
-        $this->assertCount(5, $response->messages);
+        $data = json_decode($response->content());
+        $this->assertEquals($chat->created_at->toISOString(), Carbon::parse($data->created_at)->toISOString());
+        $this->assertCount(5, $data->messages);
     }
 
-    public function test_it_returns_unprocessable_for_invalid_uuid()
+    public function test_it_returns_not_found_for_invalid_uuid()
     {
         $user = User::factory()->create();
 
-        $this->actingAs($user)->getJson('/api/chats?chat_id=not-a-uuid')
-            ->assertUnprocessable();
-    }
-
-    public function test_it_returns_unprocessable_for_missing_chat_id()
-    {
-        $user = User::factory()->create();
-
-        $this->actingAs($user)->getJson('/api/chats')
-            ->assertUnprocessable();
+        $this->actingAs($user)->getJson('/api/chats/not-a-uuid')
+            ->assertNotFound();
     }
 
     public function test_it_returns_not_found_for_nonexistent_chat()
     {
         $user = User::factory()->create();
 
-        $this->actingAs($user)->getJson('/api/chats?chat_id=' . Str::uuid())
+        $this->actingAs($user)->getJson('/api/chats/' . Str::uuid())
             ->assertNotFound();
+    }
+
+
+    public function test_it_returns_all_chats_for_authenticated_user()
+    {
+        $user = User::factory()->create();
+        $other = User::factory()->create();
+        $third = User::factory()->create();
+
+        $chat1 = Chat::query()->create([
+            'user_one_id' => $user->getKey(),
+            'user_two_id' => $other->getKey(),
+        ]);
+
+        $chat2 = Chat::query()->create([
+            'user_one_id' => $third->getKey(),
+            'user_two_id' => $user->getKey(),
+        ]);
+
+        Chat::query()->create([
+            'user_one_id' => $other->getKey(),
+            'user_two_id' => $third->getKey(),
+        ]);
+
+        $response = $this->actingAs($user)->getJson('/api/chats');
+
+        $response->assertOk();
+        $data = json_decode($response->content());
+        $this->assertCount(2, $data->data);
+        $response->assertJsonFragment(['id' => $chat1->id]);
+        $response->assertJsonFragment(['id' => $chat2->id]);
+    }
+
+    public function test_it_requires_authentication()
+    {
+        $this->getJson('/api/chats')->assertUnauthorized();
     }
 }
