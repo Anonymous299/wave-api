@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ChatResource;
+use App\Http\Resources\MessageResource;
 use App\Models\Chat;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -89,6 +90,11 @@ class ChatController extends Controller
         /** @var User $user */
         $user = auth()->user();
 
-        return ChatResource::collection($user->chats()->get());
+        return ChatResource::collection($user->chats()->paginate(25));
+    }
+
+    public function messages(Chat $chat): AnonymousResourceCollection
+    {
+        return MessageResource::collection($chat->messages()->paginate(25));
     }
 }

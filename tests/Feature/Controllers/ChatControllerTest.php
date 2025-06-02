@@ -3,13 +3,14 @@
 namespace Tests\Feature\Controllers;
 
 use App\Models\Chat;
+use App\Models\Message;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
-class ChatsControllerTest extends TestCase
+class ChatControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -18,12 +19,12 @@ class ChatsControllerTest extends TestCase
         $userOne = User::factory()->create();
         $userTwo = User::factory()->create();
 
-        $chat = Chat::create([
+        $chat = Chat::query()->create([
             'user_one_id' => $userOne->getKey(),
             'user_two_id' => $userTwo->getKey(),
         ]);
 
-        collect(range(1, 5))->each(fn () => $chat->messages()->create([
+        collect(range(1, 5))->each(fn() => $chat->messages()->create([
             'sender_id' => $userOne->getKey(),
             'body'      => 'snickers',
         ]));
@@ -33,7 +34,7 @@ class ChatsControllerTest extends TestCase
         $response
             ->assertOk()
             ->assertJsonFragment([
-                'id' => $chat->getKey(),
+                'id'       => $chat->getKey(),
                 'user_one' => [
                     'id'   => $userOne->getKey(),
                     'name' => $userOne->name,
@@ -64,7 +65,6 @@ class ChatsControllerTest extends TestCase
         $this->actingAs($user)->getJson('/api/chats/' . Str::uuid())
             ->assertNotFound();
     }
-
 
     public function test_it_returns_all_chats_for_authenticated_user()
     {
@@ -99,5 +99,56 @@ class ChatsControllerTest extends TestCase
     public function test_it_requires_authentication()
     {
         $this->getJson('/api/chats')->assertUnauthorized();
+    }
+
+    public function test_chat_messages_returns_paginated_messages_for_chat()
+    {
+        $userOne = User::factory()->create();
+        $userTwo = User::factory()->create();
+
+        $chat = Chat::query()->create([
+            'user_one_id' => $userOne->getKey(),
+            'user_two_id' => $userTwo->getKey(),
+        ]);
+
+        Message::factory(30)->create([
+            'chat_id'   => $chat->getKey(),
+            'sender_id' => $userOne->getKey(),
+            'body'      => 'Hello from user one',
+        ]);
+
+        $response = $this->actingAs($userOne)
+            ->getJson("/api/chats/{$chat->getKey()}/messages");
+
+        $response->assertOk();
+        $response->assertJsonStructure([
+            'data',
+            'links',
+            'meta',
+        ]);
+        $this->assertCount(25, $response->json('data'));
+    }
+
+    public function test_chat_messages_returns_not_found_for_invalid_chat()
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->getJson('/api/chats/not-a-uuid/messages')
+            ->assertNotFound();
+    }
+
+    public function test_chat_messages_requires_authentication()
+    {
+        $userOne = User::factory()->create();
+        $userTwo = User::factory()->create();
+
+        $chat = Chat::query()->create([
+            'user_one_id' => $userOne->getKey(),
+            'user_two_id' => $userTwo->getKey(),
+        ]);
+
+        $this->getJson("/api/chats/{$chat->getKey()}/messages")
+            ->assertUnauthorized();
     }
 }
