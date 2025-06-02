@@ -45,4 +45,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Swipe::class, 'swipee_id');
     }
+
+    public function chats(): HasMany
+    {
+        return $this->hasMany(Chat::class, 'user_one_id')
+            ->orWhere('user_two_id', $this->getKey());
+    }
 }

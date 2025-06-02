@@ -20,7 +20,7 @@ class Swipe extends Model
             ->where('swiper_id', $this->swipee->getKey())
             ->where('swipee_id', $this->swiper->getKey())
             ->where('direction', 'right')
-            ->exists();
+            ->exists() && $this->direction === 'right';
     }
 
     public function swiper(): BelongsTo

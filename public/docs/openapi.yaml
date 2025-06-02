@@ -149,6 +149,28 @@ paths:
               required:
                 - distance
       security: []
+  /api/users/me:
+    get:
+      summary: ''
+      operationId: getApiUsersMe
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
   /api/users/location:
     post:
       summary: 'Change User Location'
@@ -199,7 +221,7 @@ paths:
             text/plain:
               schema:
                 type: string
-                example: "{\n    \"swipe\": {\n        \"id\": \"12345\",\n        \"swipee_id\": \"08e1608c-eb31-4623-bde6-b63646daecf9\",\n        \"direction\": \"right\",\n        \"created_at\": \"2023-10-01T12:00:00Z\",\n    },\n   \"match\": true\n}"
+                example: "{\n    \"swipe\": {\n        \"id\": \"12345\",\n        \"swipee_id\": \"08e1608c-eb31-4623-bde6-b63646daecf9\",\n        \"direction\": \"right\",\n        \"created_at\": \"2023-10-01T12:00:00Z\",\n    },\n   \"match\": true\n   \"chat_id\": \"58c8f668-e178-481c-94c4-28eb1e9b133b\"\n}"
       tags:
         - Endpoints
       requestBody:
@@ -223,6 +245,418 @@ paths:
                 - swipee_id
                 - direction
       security: []
+  /api/messages:
+    post:
+      summary: 'Send a Message'
+      operationId: sendAMessage
+      description: 'Stores a new message in the given chat. The authenticated user must be a participant in the chat.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Message stored successfully.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Message stored successfully.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No query results for model [App\Models\Chat]...'
+                properties:
+                  message:
+                    type: string
+                    example: 'No query results for model [App\Models\Chat]...'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The given data was invalid.'
+                  errors:
+                    chat_id:
+                      - 'The chat_id field is required.'
+                    body:
+                      - 'The body field is required.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The given data was invalid.'
+                  errors:
+                    type: object
+                    properties:
+                      chat_id:
+                        type: array
+                        example:
+                          - 'The chat_id field is required.'
+                        items:
+                          type: string
+                      body:
+                        type: array
+                        example:
+                          - 'The body field is required.'
+                        items:
+                          type: string
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  type: uuid
+                  description: 'The UUID of the chat.'
+                  example: 7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b
+                  nullable: false
+                body:
+                  type: string
+                  description: 'The message body.'
+                  example: 'Hello there'
+                  nullable: false
+              required:
+                - chat_id
+                - body
+  /api/chats:
+    get:
+      summary: 'List All Chats for Authenticated User'
+      operationId: listAllChatsForAuthenticatedUser
+      description: "Returns a list of all chat records associated with the authenticated user.\nEach chat includes limited user info and the most recent 5 messages."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: 01973234-02e7-7398-a9fd-2a8b7f2590c1
+                      user_one:
+                        id: 3c58af0c-9d9b-488a-a607-f52e137a73e8
+                        name: 'Selmer Ondricka'
+                      user_two:
+                        id: 81d1e66e-21b6-4ab7-bf42-7055f55d74ce
+                        name: 'Ms. Katrine Altenwerth DVM'
+                      created_at: '2025-06-02T19:52:38.000000Z'
+                      messages: []
+                    -
+                      id: 01973234-02eb-70bc-b1a9-310fb1210b25
+                      user_one:
+                        id: 688827f9-c5b6-4f7c-94b7-19c91c7295d0
+                        name: 'Lazaro Lang'
+                      user_two:
+                        id: 3c58af0c-9d9b-488a-a607-f52e137a73e8
+                        name: 'Selmer Ondricka'
+                      created_at: '2025-06-02T19:52:38.000000Z'
+                      messages: []
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 01973234-02e7-7398-a9fd-2a8b7f2590c1
+                        user_one:
+                          id: 3c58af0c-9d9b-488a-a607-f52e137a73e8
+                          name: 'Selmer Ondricka'
+                        user_two:
+                          id: 81d1e66e-21b6-4ab7-bf42-7055f55d74ce
+                          name: 'Ms. Katrine Altenwerth DVM'
+                        created_at: '2025-06-02T19:52:38.000000Z'
+                        messages: []
+                      -
+                        id: 01973234-02eb-70bc-b1a9-310fb1210b25
+                        user_one:
+                          id: 688827f9-c5b6-4f7c-94b7-19c91c7295d0
+                          name: 'Lazaro Lang'
+                        user_two:
+                          id: 3c58af0c-9d9b-488a-a607-f52e137a73e8
+                          name: 'Selmer Ondricka'
+                        created_at: '2025-06-02T19:52:38.000000Z'
+                        messages: []
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 01973234-02e7-7398-a9fd-2a8b7f2590c1
+                        user_one:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: 3c58af0c-9d9b-488a-a607-f52e137a73e8
+                            name:
+                              type: string
+                              example: 'Selmer Ondricka'
+                        user_two:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: 81d1e66e-21b6-4ab7-bf42-7055f55d74ce
+                            name:
+                              type: string
+                              example: 'Ms. Katrine Altenwerth DVM'
+                        created_at:
+                          type: string
+                          example: '2025-06-02T19:52:38.000000Z'
+                        messages:
+                          type: array
+                          example: []
+      tags:
+        - Endpoints
+  '/api/chats/{chat_id}':
+    get:
+      summary: 'Get Chat by Query Parameter'
+      operationId: getChatByQueryParameter
+      description: 'Returns a chat resource by its ID passed as a query parameter.'
+      parameters:
+        -
+          in: query
+          name: chat_id
+          description: 'uuid The UUID of the chat.'
+          example: 7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b
+          required: true
+          schema:
+            type: string
+            description: 'uuid The UUID of the chat.'
+            example: 7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b
+            nullable: false
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b
+                  user_one:
+                    id: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+                    name: Alice
+                  user_two:
+                    id: 2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e
+                    name: Bob
+                  created_at: '2025-06-02T12:00:00Z'
+                  messages:
+                    -
+                      id: 62b8d8e3-4f24-4a1e-b0a1-9e7b2cb81a1b
+                      chat_id: 7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b
+                      sender_id: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+                      body: 'Hey there!'
+                      created_at: '2025-06-02T12:05:00Z'
+                      updated_at: '2025-06-02T12:05:00Z'
+                properties:
+                  id:
+                    type: string
+                    example: 7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b
+                  user_one:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+                      name:
+                        type: string
+                        example: Alice
+                  user_two:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e
+                      name:
+                        type: string
+                        example: Bob
+                  created_at:
+                    type: string
+                    example: '2025-06-02T12:00:00Z'
+                  messages:
+                    type: array
+                    example:
+                      -
+                        id: 62b8d8e3-4f24-4a1e-b0a1-9e7b2cb81a1b
+                        chat_id: 7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b
+                        sender_id: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+                        body: 'Hey there!'
+                        created_at: '2025-06-02T12:05:00Z'
+                        updated_at: '2025-06-02T12:05:00Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 62b8d8e3-4f24-4a1e-b0a1-9e7b2cb81a1b
+                        chat_id:
+                          type: string
+                          example: 7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b
+                        sender_id:
+                          type: string
+                          example: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+                        body:
+                          type: string
+                          example: 'Hey there!'
+                        created_at:
+                          type: string
+                          example: '2025-06-02T12:05:00Z'
+                        updated_at:
+                          type: string
+                          example: '2025-06-02T12:05:00Z'
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: chat_id
+        description: 'The ID of the chat.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  '/api/chats/{chat_id}/messages':
+    get:
+      summary: 'List Messages in Chat'
+      operationId: listMessagesInChat
+      description: 'Returns a paginated list of messages for a specific chat.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: 62b8d8e3-4f24-4a1e-b0a1-9e7b2cb81a1b
+                      body: 'Hey there!'
+                      sender_id: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+                      chat_id: 7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b
+                      created_at: '2025-06-02T12:05:00Z'
+                  links:
+                    first: 'http://localhost/api/chats/7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b/messages?page=1'
+                    last: 'http://localhost/api/chats/7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b/messages?page=1'
+                    prev: null
+                    next: null
+                  meta:
+                    current_page: 1
+                    from: 1
+                    last_page: 1
+                    path: 'http://localhost/api/chats/7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b/messages'
+                    per_page: 25
+                    to: 1
+                    total: 1
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 62b8d8e3-4f24-4a1e-b0a1-9e7b2cb81a1b
+                        body: 'Hey there!'
+                        sender_id: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+                        chat_id: 7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b
+                        created_at: '2025-06-02T12:05:00Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 62b8d8e3-4f24-4a1e-b0a1-9e7b2cb81a1b
+                        body:
+                          type: string
+                          example: 'Hey there!'
+                        sender_id:
+                          type: string
+                          example: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+                        chat_id:
+                          type: string
+                          example: 7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b
+                        created_at:
+                          type: string
+                          example: '2025-06-02T12:05:00Z'
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: 'http://localhost/api/chats/7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b/messages?page=1'
+                      last:
+                        type: string
+                        example: 'http://localhost/api/chats/7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b/messages?page=1'
+                      prev:
+                        type: string
+                        example: null
+                      next:
+                        type: string
+                        example: null
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      from:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 1
+                      path:
+                        type: string
+                        example: 'http://localhost/api/chats/7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b/messages'
+                      per_page:
+                        type: integer
+                        example: 25
+                      to:
+                        type: integer
+                        example: 1
+                      total:
+                        type: integer
+                        example: 1
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: chat_id
+        description: 'The ID of the chat.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: chat
+        description: 'Optional parameter. uuid required The UUID of the chat.'
+        required: true
+        schema:
+          type: string
+        examples:
+          omitted:
+            summary: 'When the value is omitted'
+            value: ''
+          present:
+            summary: 'When the value is present'
+            value: 7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b
   /api/auth/register:
     post:
       summary: Register
