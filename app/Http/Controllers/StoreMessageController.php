@@ -39,7 +39,7 @@ class StoreMessageController extends Controller
     {
         $request->validate([
             'chat_id' => 'required|uuid|exists:chats,id',
-            'body' => 'required|string|',
+            'body'    => 'required|string|',
         ]);
 
         /* @var User $user */
@@ -47,7 +47,7 @@ class StoreMessageController extends Controller
         $chat = $user->chats()->findOrFail($request->input('chat_id'));
         $message = $chat->messages()->create([
             'sender_id' => $user->getKey(),
-            'body' => $request->input('body'),
+            'body'      => $request->input('body'),
         ]);
 
         MessageSent::dispatch($message);
