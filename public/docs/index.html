@@ -86,6 +86,15 @@
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-swipes">
                                 <a href="#endpoints-POSTapi-swipes">Store Swipe</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-messages">
+                                <a href="#endpoints-POSTapi-messages">Send a Message</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-chats">
+                                <a href="#endpoints-GETapi-chats">List All Chats for Authenticated User</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-chats--chat_id-">
+                                <a href="#endpoints-GETapi-chats--chat_id-">Get Chat by Query Parameter</a>
+                            </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-auth-register">
                                 <a href="#endpoints-POSTapi-auth-register">Register</a>
                             </li>
@@ -921,6 +930,496 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>The direction of the swipe (left or right). Example: <code>right</code></p>
         </div>
         </form>
+
+                    <h2 id="endpoints-POSTapi-messages">Send a Message</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Stores a new message in the given chat. The authenticated user must be a participant in the chat.</p>
+
+<span id="example-requests-POSTapi-messages">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost/api/messages" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"chat_id\": \"7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b\",
+    \"body\": \"Hello there\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/messages"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "chat_id": "7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b",
+    "body": "Hello there"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-messages">
+            <blockquote>
+            <p>Example response (201):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Message stored successfully.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;No query results for model [App\\Models\\Chat]...&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;The given data was invalid.&quot;,
+    &quot;errors&quot;: {
+        &quot;chat_id&quot;: [
+            &quot;The chat_id field is required.&quot;
+        ],
+        &quot;body&quot;: [
+            &quot;The body field is required.&quot;
+        ]
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-messages" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-messages"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-messages"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-messages" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-messages">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-messages" data-method="POST"
+      data-path="api/messages"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-messages', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-messages"
+                    onclick="tryItOut('POSTapi-messages');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-messages"
+                    onclick="cancelTryOut('POSTapi-messages');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-messages"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/messages</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-messages"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-messages"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>chat_id</code></b>&nbsp;&nbsp;
+<small>uuid</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="chat_id"                data-endpoint="POSTapi-messages"
+               value="7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b"
+               data-component="body">
+    <br>
+<p>The UUID of the chat. Example: <code>7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>body</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="body"                data-endpoint="POSTapi-messages"
+               value="Hello there"
+               data-component="body">
+    <br>
+<p>The message body. Example: <code>Hello there</code></p>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-GETapi-chats">List All Chats for Authenticated User</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Returns a list of all chat records associated with the authenticated user.
+Each chat includes limited user info and the most recent 5 messages.</p>
+
+<span id="example-requests-GETapi-chats">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost/api/chats" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/chats"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-chats">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: &quot;01973234-02e7-7398-a9fd-2a8b7f2590c1&quot;,
+            &quot;user_one&quot;: {
+                &quot;id&quot;: &quot;3c58af0c-9d9b-488a-a607-f52e137a73e8&quot;,
+                &quot;name&quot;: &quot;Selmer Ondricka&quot;
+            },
+            &quot;user_two&quot;: {
+                &quot;id&quot;: &quot;81d1e66e-21b6-4ab7-bf42-7055f55d74ce&quot;,
+                &quot;name&quot;: &quot;Ms. Katrine Altenwerth DVM&quot;
+            },
+            &quot;created_at&quot;: &quot;2025-06-02T19:52:38.000000Z&quot;,
+            &quot;messages&quot;: []
+        },
+        {
+            &quot;id&quot;: &quot;01973234-02eb-70bc-b1a9-310fb1210b25&quot;,
+            &quot;user_one&quot;: {
+                &quot;id&quot;: &quot;688827f9-c5b6-4f7c-94b7-19c91c7295d0&quot;,
+                &quot;name&quot;: &quot;Lazaro Lang&quot;
+            },
+            &quot;user_two&quot;: {
+                &quot;id&quot;: &quot;3c58af0c-9d9b-488a-a607-f52e137a73e8&quot;,
+                &quot;name&quot;: &quot;Selmer Ondricka&quot;
+            },
+            &quot;created_at&quot;: &quot;2025-06-02T19:52:38.000000Z&quot;,
+            &quot;messages&quot;: []
+        }
+    ]
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-chats" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-chats"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-chats"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-chats" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-chats">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-chats" data-method="GET"
+      data-path="api/chats"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-chats', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-chats"
+                    onclick="tryItOut('GETapi-chats');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-chats"
+                    onclick="cancelTryOut('GETapi-chats');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-chats"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/chats</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-chats"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-chats"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
+                    <h2 id="endpoints-GETapi-chats--chat_id-">Get Chat by Query Parameter</h2>
+
+<p>
+</p>
+
+<p>Returns a chat resource by its ID passed as a query parameter.</p>
+
+<span id="example-requests-GETapi-chats--chat_id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost/api/chats/architecto?chat_id=7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/chats/architecto"
+);
+
+const params = {
+    "chat_id": "7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-chats--chat_id-">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;id&quot;: &quot;7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b&quot;,
+    &quot;user_one&quot;: {
+        &quot;id&quot;: &quot;1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d&quot;,
+        &quot;name&quot;: &quot;Alice&quot;
+    },
+    &quot;user_two&quot;: {
+        &quot;id&quot;: &quot;2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e&quot;,
+        &quot;name&quot;: &quot;Bob&quot;
+    },
+    &quot;created_at&quot;: &quot;2025-06-02T12:00:00Z&quot;,
+    &quot;messages&quot;: [
+        {
+            &quot;id&quot;: &quot;62b8d8e3-4f24-4a1e-b0a1-9e7b2cb81a1b&quot;,
+            &quot;chat_id&quot;: &quot;7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b&quot;,
+            &quot;sender_id&quot;: &quot;1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d&quot;,
+            &quot;body&quot;: &quot;Hey there!&quot;,
+            &quot;created_at&quot;: &quot;2025-06-02T12:05:00Z&quot;,
+            &quot;updated_at&quot;: &quot;2025-06-02T12:05:00Z&quot;
+        }
+    ]
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-chats--chat_id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-chats--chat_id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-chats--chat_id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-chats--chat_id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-chats--chat_id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-chats--chat_id-" data-method="GET"
+      data-path="api/chats/{chat_id}"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-chats--chat_id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-chats--chat_id-"
+                    onclick="tryItOut('GETapi-chats--chat_id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-chats--chat_id-"
+                    onclick="cancelTryOut('GETapi-chats--chat_id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-chats--chat_id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/chats/{chat_id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-chats--chat_id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-chats--chat_id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>chat_id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="chat_id"                data-endpoint="GETapi-chats--chat_id-"
+               value="architecto"
+               data-component="url">
+    <br>
+<p>The ID of the chat. Example: <code>architecto</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>chat_id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="chat_id"                data-endpoint="GETapi-chats--chat_id-"
+               value="7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b"
+               data-component="query">
+    <br>
+<p>uuid The UUID of the chat. Example: <code>7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b</code></p>
+            </div>
+                </form>
 
                     <h2 id="endpoints-POSTapi-auth-register">Register</h2>
 

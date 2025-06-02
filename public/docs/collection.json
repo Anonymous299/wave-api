@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "wave-api API Documentation",
-        "_postman_id": "34d383c1-1d57-45d9-94fe-2be8ad2798ff",
+        "_postman_id": "669bb11c-fa31-49e2-9c0c-853ff28b65a6",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -228,6 +228,135 @@
                             "header": [],
                             "code": 200,
                             "body": "{\n    \"swipe\": {\n        \"id\": \"12345\",\n        \"swipee_id\": \"08e1608c-eb31-4623-bde6-b63646daecf9\",\n        \"direction\": \"right\",\n        \"created_at\": \"2023-10-01T12:00:00Z\",\n    },\n   \"match\": true\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Send a Message",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/messages",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/messages"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"chat_id\":\"7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b\",\"body\":\"Hello there\"}"
+                        },
+                        "description": "Stores a new message in the given chat. The authenticated user must be a participant in the chat."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"Message stored successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Chat]...\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"chat_id\": [\"The chat_id field is required.\"],\n    \"body\": [\"The body field is required.\"]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "List All Chats for Authenticated User",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/chats",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/chats"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns a list of all chat records associated with the authenticated user.\nEach chat includes limited user info and the most recent 5 messages."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\n      \"id\": \"01973234-02e7-7398-a9fd-2a8b7f2590c1\",\n      \"user_one\": {\n        \"id\": \"3c58af0c-9d9b-488a-a607-f52e137a73e8\",\n        \"name\": \"Selmer Ondricka\"\n      },\n      \"user_two\": {\n        \"id\": \"81d1e66e-21b6-4ab7-bf42-7055f55d74ce\",\n        \"name\": \"Ms. Katrine Altenwerth DVM\"\n      },\n      \"created_at\": \"2025-06-02T19:52:38.000000Z\",\n      \"messages\": []\n    },\n    {\n      \"id\": \"01973234-02eb-70bc-b1a9-310fb1210b25\",\n      \"user_one\": {\n        \"id\": \"688827f9-c5b6-4f7c-94b7-19c91c7295d0\",\n        \"name\": \"Lazaro Lang\"\n      },\n      \"user_two\": {\n        \"id\": \"3c58af0c-9d9b-488a-a607-f52e137a73e8\",\n        \"name\": \"Selmer Ondricka\"\n      },\n      \"created_at\": \"2025-06-02T19:52:38.000000Z\",\n      \"messages\": []\n    }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get Chat by Query Parameter",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/chats\/:chat_id",
+                            "query": [
+                                {
+                                    "key": "chat_id",
+                                    "value": "7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b",
+                                    "description": "uuid The UUID of the chat.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/chats\/:chat_id?chat_id=7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b",
+                            "variable": [
+                                {
+                                    "id": "chat_id",
+                                    "key": "chat_id",
+                                    "value": "architecto",
+                                    "description": "The ID of the chat."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns a chat resource by its ID passed as a query parameter.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"id\": \"7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b\",\n  \"user_one\": {\n    \"id\": \"1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d\",\n    \"name\": \"Alice\"\n  },\n  \"user_two\": {\n    \"id\": \"2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e\",\n    \"name\": \"Bob\"\n  },\n  \"created_at\": \"2025-06-02T12:00:00Z\",\n  \"messages\": [\n    {\n      \"id\": \"62b8d8e3-4f24-4a1e-b0a1-9e7b2cb81a1b\",\n      \"chat_id\": \"7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b\",\n      \"sender_id\": \"1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d\",\n      \"body\": \"Hey there!\",\n      \"created_at\": \"2025-06-02T12:05:00Z\",\n      \"updated_at\": \"2025-06-02T12:05:00Z\"\n    }\n  ]\n}",
                             "name": ""
                         }
                     ]
