@@ -3,7 +3,6 @@
 namespace Tests\Feature\Controllers;
 
 use App\Models\Chat;
-use App\Models\Message;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
