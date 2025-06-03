@@ -35,6 +35,7 @@ class RegisterController extends Controller
             'device_name' => 'required|string|max:255',
             'latitude'    => 'required|numeric',
             'longitude'   => 'required|numeric',
+            'fcm_token'   => 'string',
         ]);
 
         $user = User::query()->create([
@@ -45,6 +46,7 @@ class RegisterController extends Controller
                 $request->latitude,
                 $request->longitude,
             ),
+            'fcm_token' => $request->fcm_token,
         ]);
 
         return response()->json([
