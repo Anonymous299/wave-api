@@ -7,7 +7,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\Fcm\FcmChannel;
 use NotificationChannels\Fcm\FcmMessage;
-use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
 class MatchCreated extends Notification
 {
@@ -24,33 +23,32 @@ class MatchCreated extends Notification
 
     public function toFcm(object $notifiable): FcmMessage
     {
-        return (new FcmMessage(
-            notification: new FcmNotification(
-                title: 'It’s a Match!',
-                body: "You and {$this->matchedWith->name} liked each other.",
-                image: 'https://placehold.co/400' // Optional, replace with matched user's avatar if available
-            )
-        ))->custom([
-            'android' => [
-                'notification' => [
-                    'color' => '#0A0A0A',
-                    'sound' => 'default',
-                ],
-                'fcm_options'  => [
-                    'analytics_label' => 'match_android',
-                ],
-            ],
-            'apns' => [
-                'payload' => [
-                    'aps' => [
+        return FcmMessage::create()
+            ->withData([
+                'title' => 'It’s a Match!',
+                'body'  => "You and {$this->matchedWith->name} liked each other.",
+                'type'  => 'match',
+            ])->custom([
+                'android' => [
+                    'notification' => [
+                        'color' => '#0A0A0A',
                         'sound' => 'default',
                     ],
+                    'fcm_options'  => [
+                        'analytics_label' => 'match_android',
+                    ],
                 ],
-                'fcm_options' => [
-                    'analytics_label' => 'match_ios',
+                'apns'    => [
+                    'payload'     => [
+                        'aps' => [
+                            'sound' => 'default',
+                        ],
+                    ],
+                    'fcm_options' => [
+                        'analytics_label' => 'match_ios',
+                    ],
                 ],
-            ],
-        ]);
+            ]);
     }
 }
 
