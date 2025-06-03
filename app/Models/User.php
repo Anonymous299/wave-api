@@ -63,10 +63,10 @@ class User extends Authenticatable
     /**
      * Specifies the user's FCM token
      *
-     * @return string|array
+     * @return string|array|null
      */
-    public function routeNotificationForFcm(): array|string
+    public function routeNotificationForFcm(): array|string|null
     {
-        return $this->fcm_token;
+        return $this->fcm_token ?: null;
     }
 }

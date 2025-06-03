@@ -5,7 +5,9 @@ namespace Tests\Feature\Controllers;
 use App\Models\Chat;
 use App\Models\Swipe;
 use App\Models\User;
+use App\Notifications\MatchCreated;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -78,6 +80,28 @@ class StoreSwipeControllerTest extends TestCase
             'user_one_id' => $swiper->getKey(),
             'user_two_id' => $swipee->getKey(),
         ]);
+    }
+
+    public function test_it_sends_match_notifications()
+    {
+        Notification::fake();
+
+        $swiper = User::factory()->create();
+        $swipee = User::factory()->create();
+
+        Swipe::factory()->create([
+            'swiper_id' => $swipee->getKey(),
+            'swipee_id' => $swiper->getKey(),
+            'direction' => 'right',
+        ]);
+
+        $this->actingAs($swiper)->postJson('/api/swipes', [
+            'swipee_id' => $swipee->getKey(),
+            'direction' => 'right',
+        ])->assertCreated();
+
+        Notification::assertSentTo($swiper, MatchCreated::class);
+        Notification::assertSentTo($swipee, MatchCreated::class);
     }
 
     public static function provideInvalidParameters(): array
