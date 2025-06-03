@@ -50,7 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::get('/fcm-test', function(Illuminate\Http\Request $request) {
-        auth()->user()->notify(new \App\Notifications\MessageReceived());
+        auth()->user()->notify(new \App\Notifications\MatchCreated(\App\Models\User::firstOrFail()));
 
         return response()->json(['status' => 'ok']);
     });
