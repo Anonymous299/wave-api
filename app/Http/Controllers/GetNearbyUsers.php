@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Swipe;
 use App\Models\User;
 use Clickbar\Magellan\Data\Geometries\Point;
 use Clickbar\Magellan\Database\PostgisFunctions\ST;
@@ -43,6 +44,8 @@ class GetNearbyUsers extends Controller
             $request->input('longitude')
         ) : $authUser->location;
 
+//        $userHasSwipedOn = $authUser->swipes()->get()->map(fn(Swipe $s) => $s->swipee_id);
+
         return User::query()
             ->select()
             ->addSelect(
@@ -54,6 +57,7 @@ class GetNearbyUsers extends Controller
                 ST::distanceSphere($origin, 'location'), '<=', $distanceInKm * 1000
             )
             ->where('id', '!=', $authUser->getKey())
+//            ->whereNotIn('id', $userHasSwipedOn)
             ->orderBy('distance')
             ->get()
             ->map(fn($user) => [
