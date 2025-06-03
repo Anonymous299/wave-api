@@ -59,4 +59,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(Bio::class);
     }
+
+    /**
+     * Specifies the user's FCM token
+     *
+     * @return string|array
+     */
+    public function routeNotificationForFcm(): array|string
+    {
+        return $this->fcm_token;
+    }
 }
