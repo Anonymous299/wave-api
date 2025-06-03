@@ -14,7 +14,7 @@ class MessageReceived extends Notification
 {
     use Queueable;
 
-    public function __construct(private readonly Message $message)
+    public function __construct()
     {
         //
     }

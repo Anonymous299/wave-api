@@ -48,6 +48,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{chat}/messages', [ChatController::class, 'messages'])
             ->name('messages');
     });
+
+    Route::get('/fcm-test', function(Illuminate\Http\Request $request) {
+        auth()->user()->notify(new \App\Notifications\MessageReceived());
+
+        return response()->json(['status' => 'ok']);
+    });
 });
 
 Route::prefix('auth')->name('auth.')->group(function () {
