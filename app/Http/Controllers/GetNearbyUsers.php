@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Swipe;
 use App\Models\User;
 use Clickbar\Magellan\Data\Geometries\Point;
 use Clickbar\Magellan\Database\PostgisFunctions\ST;

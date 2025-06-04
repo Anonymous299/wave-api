@@ -104,6 +104,18 @@ class StoreSwipeControllerTest extends TestCase
         Notification::assertSentTo($swipee, MatchCreated::class);
     }
 
+    public function test_it_prevents_swiping_on_self()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->postJson('/api/swipes', [
+            'swipee_id' => $user->getKey(),
+            'direction' => 'right',
+        ]);
+
+        $response->assertUnprocessable();
+    }
+
     public static function provideInvalidParameters(): array
     {
         return [

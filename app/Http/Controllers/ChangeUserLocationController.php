@@ -34,10 +34,6 @@ class ChangeUserLocationController extends Controller
         /** @var User|null $user */
         $user = Auth::user();
 
-        if (!$user) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
         $user->update([
             'location' => Point::makeGeodetic(
                 $request->input('latitude'),

@@ -38,6 +38,12 @@ class StoreSwipeController extends Controller
             'direction' => 'required|in:left,right',
         ]);
 
+        if ((string)$request->swipee_id === (string)$request->user()->getKey()) {
+            return response()->json([
+                'message' => 'You cannot swipe on yourself.',
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         $swipe = auth()->user()
             ->swipes()
             ->create([
