@@ -8,7 +8,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\StoreMessageController;
 use App\Http\Controllers\StoreSwipeController;
-use App\Http\Controllers\UpdateUserBioController;
+use App\Http\Controllers\UpdateUserController;
 use App\Http\Controllers\UpdateFcmTokenController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,8 +26,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('nearby/count', GetNearbyUserCount::class)->name('nearby.count');
 
         Route::get('me', fn() => response()->json(auth()->user()))->name('me');
-        Route::post('me', UpdateUserBioController::class);
-        Route::post('me', UpdateFcmTokenController::class)->name('me.update');
+        Route::post('me', UpdateUserController::class);
 
         Route::post('location', ChangeUserLocationController::class)
             ->name('location.update');

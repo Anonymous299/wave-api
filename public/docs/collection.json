@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "wave-api API Documentation",
-        "_postman_id": "18f19c28-8399-46c2-9d16-acd08f7f367c",
+        "_postman_id": "eeb3d20e-fdb3-413d-975c-fb88d12d2bb0",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -205,7 +205,7 @@
                     ]
                 },
                 {
-                    "name": "Update FCM Token",
+                    "name": "Update User",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -226,21 +226,24 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"fcm_token\":\"fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg...\"}"
+                            "raw": "{\"fcm_token\":\"fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg\",\"bio\":{\"gender\":\"male\",\"age\":28,\"job\":\"Software Engineer\",\"company\":\"Acme Corp\",\"education\":\"B.Sc. Computer Science\",\"about\":\"Passionate about building scalable systems.\"}}"
                         },
-                        "description": "Updates the Firebase Cloud Messaging (FCM) token for the authenticated user."
+                        "description": "Updates the authenticated user's bio information.\nAccepts a nested `bio` object with optional fields.",
+                        "auth": {
+                            "type": "noauth"
+                        }
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"message\": \"FCM token updated successfully\"\n}",
+                            "body": "{}",
                             "name": ""
                         },
                         {
                             "header": [],
-                            "code": 422,
-                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"fcm_token\": [\"The fcm token field is required.\"]\n  }\n}",
+                            "code": 201,
+                            "body": "{}",
                             "name": ""
                         }
                     ]
