@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
+use App\Models\Swipe;
 use App\Models\User;
 use Clickbar\Magellan\Data\Geometries\Point;
 use Clickbar\Magellan\Database\PostgisFunctions\ST;
 use Illuminate\Http\Request;
 
-class GetNearbyUsers extends Controller
+class GetNearbyUsersController extends Controller
 {
     /**
      * Get Nearby Users
@@ -22,9 +24,36 @@ class GetNearbyUsers extends Controller
      * @queryParam distance float required The distance in kilometers to search for users.
      *
      * @response 200 {
-     *   "users": [
-     *     {id: "98cca5ca-ca31-4031-a41b-241dc0876d5f" name: "John Doe" distance: 1234},
-     *   ]
+     * "data": [
+     * {
+     * "id": "a730521f-88ae-423d-96c8-dc3e537c3d5d",
+     * "name": "Jan Nicolas",
+     * "email": "godfrey85@example.net",
+     * "email_verified_at": "2025-06-06T18:46:05.000000Z",
+     * "location": {
+     * "type": "Point",
+     * "coordinates": [
+     * -80.5197298,
+     * 43.4779751
+     * ]
+     * },
+     * "created_at": "2025-06-06T18:46:05.000000Z",
+     * "updated_at": "2025-06-06T18:46:05.000000Z",
+     * "fcm_token": null,
+     * "distance": 1041.17488371,
+     * "bio": {
+     * "id": "01974690-8202-72e6-a880-cab892a0d332",
+     * "gender": "male",
+     * "age": 76,
+     * "job": "Irradiated-Fuel Handler",
+     * "company": "Bashirian, O'Connell and Okuneva",
+     * "education": "BSc",
+     * "about": "Perspiciatis sed modi quidem debitis. Accusantium dicta quam ex voluptatum. Excepturi tempora corrupti accusantium.",
+     * "user_id": "a730521f-88ae-423d-96c8-dc3e537c3d5d"
+     * }
+     * }
+     * ]
+     * }
      */
     public function __invoke(Request $request)
     {
@@ -43,9 +72,9 @@ class GetNearbyUsers extends Controller
             $request->input('longitude')
         ) : $authUser->location;
 
-//        $userHasSwipedOn = $authUser->swipes()->get()->map(fn(Swipe $s) => $s->swipee_id);
+        $userHasSwipedOn = $authUser->swipes()->select('swipee_id')->get()->map(fn(Swipe $s) => $s->swipee_id);
 
-        return User::query()
+        return UserResource::collection(User::query()
             ->select()
             ->addSelect(
                 ST::distanceSphere(
@@ -56,12 +85,8 @@ class GetNearbyUsers extends Controller
                 ST::distanceSphere($origin, 'location'), '<=', $distanceInKm * 1000
             )
             ->where('id', '!=', $authUser->getKey())
-//            ->whereNotIn('id', $userHasSwipedOn)
+            ->whereNotIn('id', $userHasSwipedOn)
             ->orderBy('distance')
-            ->get()
-            ->map(fn($user) => [
-                ...$user->toArray(),
-                'distance' => $user->distance / 1000,
-            ]);
+            ->get());
     }
 }
