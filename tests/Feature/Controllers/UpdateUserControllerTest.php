@@ -7,7 +7,7 @@ use Clickbar\Magellan\Data\Geometries\Point;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class UpdateUserBioControllerTest extends TestCase
+class UpdateUserControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -57,5 +57,31 @@ class UpdateUserBioControllerTest extends TestCase
 
         $this->assertDatabaseCount('bios', 1);
         $this->assertDatabaseHas('bios', [...$expected, 'id' => $bio->getKey()]);
+    }
+
+    public function test_authenticated_user_can_update_fcm_token()
+    {
+        $user = User::factory()->create();
+        $token = 'fake_token_123';
+
+        $response = $this->actingAs($user)->postJson('/api/users/me', [
+            'fcm_token' => $token,
+        ]);
+
+        $response->assertOk();
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'fcm_token' => $token,
+        ]);
+    }
+
+    public function test_unauthenticated_user_cannot_update_fcm_token()
+    {
+        $response = $this->postJson('/api/users/me', [
+            'fcm_token' => 'some_token',
+        ]);
+
+        $response->assertUnauthorized();
     }
 }

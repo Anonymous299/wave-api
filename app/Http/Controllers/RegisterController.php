@@ -23,6 +23,7 @@ class RegisterController extends Controller
      * @bodyParam device_name string required The name of the device.
      * @bodyParam latitude float required The latitude of the user.
      * @bodyParam longitude float required The longitude of the user.
+     * @bodyParam fcm_token string optional The Firebase Cloud Messaging token for the user's device. Example: fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg...
      *
      * @response 201 { token: "token", user_id: "08e1608c-eb31-4623-bde6-b63646daecf9" }
      */
@@ -35,6 +36,7 @@ class RegisterController extends Controller
             'device_name' => 'required|string|max:255',
             'latitude'    => 'required|numeric',
             'longitude'   => 'required|numeric',
+            'fcm_token'   => 'string',
         ]);
 
         $user = User::query()->create([
@@ -45,6 +47,7 @@ class RegisterController extends Controller
                 $request->latitude,
                 $request->longitude,
             ),
+            'fcm_token' => $request->fcm_token,
         ]);
 
         return response()->json([

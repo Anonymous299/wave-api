@@ -26,6 +26,7 @@ class GetNearbyUserCount extends Controller
      *    "latitude": 43.4779751,
      *    "longitude": -80.5197298
      *  }
+     * }
      */
     public function __invoke(Request $request): JsonResponse
     {

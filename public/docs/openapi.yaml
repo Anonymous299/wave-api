@@ -128,10 +128,31 @@ paths:
         200:
           description: ''
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
-                example: "{\n \"count\": 5,\n \"distance\": 50,\n \"origin\": {\n   \"latitude\": 43.4779751,\n   \"longitude\": -80.5197298\n }"
+                type: object
+                example:
+                  count: 5
+                  distance: 50
+                  origin:
+                    latitude: 43.4779751
+                    longitude: -80.5197298
+                properties:
+                  count:
+                    type: integer
+                    example: 5
+                  distance:
+                    type: integer
+                    example: 50
+                  origin:
+                    type: object
+                    properties:
+                      latitude:
+                        type: number
+                        example: 43.4779751
+                      longitude:
+                        type: number
+                        example: -80.5197298
       tags:
         - Endpoints
       requestBody:
@@ -172,8 +193,8 @@ paths:
         - Endpoints
       security: []
     post:
-      summary: 'Update User Bio'
-      operationId: updateUserBio
+      summary: 'Update User'
+      operationId: updateUser
       description: "Updates the authenticated user's bio information.\nAccepts a nested `bio` object with optional fields."
       parameters: []
       responses:
@@ -202,6 +223,11 @@ paths:
             schema:
               type: object
               properties:
+                fcm_token:
+                  type: string
+                  description: "Optional. The Firebase Cloud Messaging token for the user's device."
+                  example: 'fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg'
+                  nullable: false
                 bio:
                   type: object
                   description: "The user's bio information."
@@ -727,6 +753,28 @@ paths:
           present:
             summary: 'When the value is present'
             value: 7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b
+  /api/fcm-test:
+    get:
+      summary: ''
+      operationId: getApiFcmTest
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
   /api/auth/register:
     post:
       summary: Register
@@ -779,6 +827,11 @@ paths:
                   type: number
                   description: 'The longitude of the user.'
                   example: 4326.41688
+                  nullable: false
+                fcm_token:
+                  type: string
+                  description: "optional The Firebase Cloud Messaging token for the user's device."
+                  example: 'fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg...'
                   nullable: false
                 password_confirmation:
                   type: string

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chat;
+use App\Notifications\MatchCreated;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,6 +38,12 @@ class StoreSwipeController extends Controller
             'direction' => 'required|in:left,right',
         ]);
 
+        if ((string)$request->swipee_id === (string)$request->user()->getKey()) {
+            return response()->json([
+                'message' => 'You cannot swipe on yourself.',
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         $swipe = auth()->user()
             ->swipes()
             ->create([
@@ -44,12 +51,16 @@ class StoreSwipeController extends Controller
                 'direction' => $request->direction,
             ]);
 
-        $chat = Chat::query()
-            ->where('user_one_id', $swipe->swiper_id)
-            ->where('user_two_id', $swipe->swipee_id)->first()
-            ?? Chat::query()
-                ->where('user_two_id', $swipe->swiper_id)
-                ->where('user_one_id', $swipe->swipee_id)->first();
+        $chat = null;
+        if ($swipe->isMatch()) {
+            $chat = Chat::query()->create([
+                'user_one_id' => $swipe->swiper->getKey(),
+                'user_two_id' => $swipe->swipee->getKey(),
+            ]);
+
+            $swipe->swiper->notify(new MatchCreated($swipe->swipee));
+            $swipe->swipee->notify(new MatchCreated($swipe->swiper));
+        }
 
         return response()->json([
             'swipe'   => $swipe->toArray(),

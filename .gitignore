@@ -26,4 +26,5 @@ public/docs/css/*
 public/docs/images/*
 public/docs/js/*
 .scribe/*
+storage/app/firebase-auth.json
 tink.php
