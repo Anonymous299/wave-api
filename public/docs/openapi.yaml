@@ -171,6 +171,76 @@ paths:
       tags:
         - Endpoints
       security: []
+    post:
+      summary: 'Update User Bio'
+      operationId: updateUserBio
+      description: "Updates the authenticated user's bio information.\nAccepts a nested `bio` object with optional fields."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {  }
+                properties: {  }
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {  }
+                properties: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bio:
+                  type: object
+                  description: "The user's bio information."
+                  example: []
+                  nullable: false
+                  properties:
+                    gender:
+                      type: string
+                      description: "Optional. The user's gender."
+                      example: male
+                      nullable: false
+                    age:
+                      type: integer
+                      description: "Optional. The user's age. Must be between 18 and 100."
+                      example: 28
+                      nullable: false
+                    job:
+                      type: string
+                      description: "Optional. The user's job title."
+                      example: 'Software Engineer'
+                      nullable: false
+                    company:
+                      type: string
+                      description: "Optional. The user's company name."
+                      example: 'Acme Corp'
+                      nullable: false
+                    education:
+                      type: string
+                      description: "Optional. The user's education information."
+                      example: 'B.Sc. Computer Science'
+                      nullable: false
+                    about:
+                      type: string
+                      description: 'Optional. A short description about the user.'
+                      example: 'Passionate about building scalable systems.'
+                      nullable: false
+              required:
+                - bio
+      security: []
   /api/users/location:
     post:
       summary: 'Change User Location'
