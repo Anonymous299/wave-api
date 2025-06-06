@@ -7,7 +7,7 @@ use Clickbar\Magellan\Database\PostgisFunctions\ST;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class GetNearbyUserCount extends Controller
+class GetNearbyUserCountController extends Controller
 {
     /**
      * @param Request $request

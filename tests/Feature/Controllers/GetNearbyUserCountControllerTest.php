@@ -4,12 +4,12 @@ namespace Tests\Feature\Controllers;
 
 use App\Models\User;
 use Clickbar\Magellan\Data\Geometries\Point;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-class GetNearbyUserCountTest extends TestCase
+class GetNearbyUserCountControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseTransactions;
 
     private const TEST_LAT_A = 43.4779751;
     private const TEST_LNG_A = -80.5197298;

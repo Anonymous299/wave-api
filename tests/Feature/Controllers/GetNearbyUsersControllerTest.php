@@ -4,12 +4,12 @@ namespace Tests\Feature\Controllers;
 
 use App\Models\User;
 use Clickbar\Magellan\Data\Geometries\Point;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-class GetNearbyUsersTest extends TestCase
+class GetNearbyUsersControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseTransactions;
 
     private const TEST_LAT_A = 43.4779751;
     private const TEST_LNG_A = -80.5197298;
@@ -21,9 +21,11 @@ class GetNearbyUsersTest extends TestCase
 
     public function test_it_gets_nearby_users()
     {
-        $expectedUser = User::factory()->create([
-            'location' => Point::makeGeodetic(self::TEST_LAT_A, self::TEST_LNG_A),
-        ]);
+        $expectedUser = User::factory()
+            ->withBio()
+            ->create([
+                'location' => Point::makeGeodetic(self::TEST_LAT_A, self::TEST_LNG_A),
+            ]);
 
         $otherUser = User::factory()->create([
             'location' => Point::makeGeodetic(self::TEST_LAT_B, self::TEST_LNG_B),
@@ -34,10 +36,13 @@ class GetNearbyUsersTest extends TestCase
             'longitude' => self::TEST_LNG_B,
             'distance'  => 50,
         ]))->assertOk()->assertJson([
-            [
-                'id'       => $expectedUser->getKey(),
-                'distance' => self::EXPECTED_DISTANCE
-            ],
+            'data' => [
+                [
+                    'id'       => $expectedUser->getKey(),
+                    'distance' => self::EXPECTED_DISTANCE,
+                    'bio'      => ['id' => $expectedUser->bio()->first()->getKey()],
+                ]
+            ]
         ]);
     }
 
@@ -67,10 +72,37 @@ class GetNearbyUsersTest extends TestCase
         $this->actingAs($expectedUser)->get(route('users.nearby', [
             'distance' => 1000,
         ]))->assertOk()->assertJson([
-            [
-                'id'       => $otherUser->getKey(),
-                'distance' => self::EXPECTED_DISTANCE
+            'data' => [
+                [
+                    'id'       => $otherUser->getKey(),
+                    'distance' => self::EXPECTED_DISTANCE
+                ]
             ],
         ]);
+    }
+
+    public function test_it_does_not_return_people_you_have_already_swiped_on()
+    {
+        $this->withoutExceptionHandling();
+
+        /** @var User $user */
+        $user = User::factory()->create(
+            ['location' => Point::makeGeodetic(self::TEST_LAT_A, self::TEST_LNG_A)]
+        );
+        $userTwo = User::factory()->create(
+            ['location' => Point::makeGeodetic(self::TEST_LAT_A, self::TEST_LNG_A)]
+        );
+        $userThree = User::factory()->create(
+            ['location' => Point::makeGeodetic(self::TEST_LAT_A, self::TEST_LNG_A)]
+        );
+
+        $user->swipes()->create([
+            'swipee_id' => $userTwo->getKey(),
+            'direction' => 'right',
+        ]);
+
+        $response = $this->actingAs($user)->getJson(route('users.nearby', ['distance' => 1000]));
+        $response->assertOk();
+        $response->assertJsonCount(1);
     }
 }

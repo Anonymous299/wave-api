@@ -76,10 +76,128 @@ paths:
         200:
           description: ''
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
-                example: "{\n  \"users\": [\n    {id: \"98cca5ca-ca31-4031-a41b-241dc0876d5f\" name: \"John Doe\" distance: 1234},\n  ]"
+                type: object
+                example:
+                  data:
+                    -
+                      id: a730521f-88ae-423d-96c8-dc3e537c3d5d
+                      name: 'Jan Nicolas'
+                      email: godfrey85@example.net
+                      email_verified_at: '2025-06-06T18:46:05.000000Z'
+                      location:
+                        type: Point
+                        coordinates:
+                          - -80.5197298
+                          - 43.4779751
+                      created_at: '2025-06-06T18:46:05.000000Z'
+                      updated_at: '2025-06-06T18:46:05.000000Z'
+                      fcm_token: null
+                      distance: 1041.17488371
+                      bio:
+                        id: 01974690-8202-72e6-a880-cab892a0d332
+                        gender: male
+                        age: 76
+                        job: 'Irradiated-Fuel Handler'
+                        company: "Bashirian, O'Connell and Okuneva"
+                        education: BSc
+                        about: 'Perspiciatis sed modi quidem debitis. Accusantium dicta quam ex voluptatum. Excepturi tempora corrupti accusantium.'
+                        user_id: a730521f-88ae-423d-96c8-dc3e537c3d5d
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: a730521f-88ae-423d-96c8-dc3e537c3d5d
+                        name: 'Jan Nicolas'
+                        email: godfrey85@example.net
+                        email_verified_at: '2025-06-06T18:46:05.000000Z'
+                        location:
+                          type: Point
+                          coordinates:
+                            - -80.5197298
+                            - 43.4779751
+                        created_at: '2025-06-06T18:46:05.000000Z'
+                        updated_at: '2025-06-06T18:46:05.000000Z'
+                        fcm_token: null
+                        distance: 1041.17488371
+                        bio:
+                          id: 01974690-8202-72e6-a880-cab892a0d332
+                          gender: male
+                          age: 76
+                          job: 'Irradiated-Fuel Handler'
+                          company: "Bashirian, O'Connell and Okuneva"
+                          education: BSc
+                          about: 'Perspiciatis sed modi quidem debitis. Accusantium dicta quam ex voluptatum. Excepturi tempora corrupti accusantium.'
+                          user_id: a730521f-88ae-423d-96c8-dc3e537c3d5d
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: a730521f-88ae-423d-96c8-dc3e537c3d5d
+                        name:
+                          type: string
+                          example: 'Jan Nicolas'
+                        email:
+                          type: string
+                          example: godfrey85@example.net
+                        email_verified_at:
+                          type: string
+                          example: '2025-06-06T18:46:05.000000Z'
+                        location:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              example: Point
+                            coordinates:
+                              type: array
+                              example:
+                                - -80.5197298
+                                - 43.4779751
+                              items:
+                                type: number
+                        created_at:
+                          type: string
+                          example: '2025-06-06T18:46:05.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2025-06-06T18:46:05.000000Z'
+                        fcm_token:
+                          type: string
+                          example: null
+                        distance:
+                          type: number
+                          example: 1041.17488371
+                        bio:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: 01974690-8202-72e6-a880-cab892a0d332
+                            gender:
+                              type: string
+                              example: male
+                            age:
+                              type: integer
+                              example: 76
+                            job:
+                              type: string
+                              example: 'Irradiated-Fuel Handler'
+                            company:
+                              type: string
+                              example: "Bashirian, O'Connell and Okuneva"
+                            education:
+                              type: string
+                              example: BSc
+                            about:
+                              type: string
+                              example: 'Perspiciatis sed modi quidem debitis. Accusantium dicta quam ex voluptatum. Excepturi tempora corrupti accusantium.'
+                            user_id:
+                              type: string
+                              example: a730521f-88ae-423d-96c8-dc3e537c3d5d
       tags:
         - Endpoints
       requestBody:

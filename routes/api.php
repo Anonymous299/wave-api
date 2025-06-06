@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\ChangeUserLocationController;
 use App\Http\Controllers\ChatController;
-use App\Http\Controllers\GetNearbyUserCount;
-use App\Http\Controllers\GetNearbyUsers;
+use App\Http\Controllers\GetNearbyUserCountController;
+use App\Http\Controllers\GetNearbyUsersController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\StoreMessageController;
@@ -22,8 +22,8 @@ Route::get('health', fn() => response()->json(['status' => 'ok']))->name('health
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('users')->name('users.')->group(function () {
-        Route::get('nearby', GetNearbyUsers::class)->name('nearby');
-        Route::get('nearby/count', GetNearbyUserCount::class)->name('nearby.count');
+        Route::get('nearby', GetNearbyUsersController::class)->name('nearby');
+        Route::get('nearby/count', GetNearbyUserCountController::class)->name('nearby.count');
 
         Route::get('me', fn() => response()->json(auth()->user()))->name('me');
         Route::post('me', UpdateUserController::class);
