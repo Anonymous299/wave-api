@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "wave-api API Documentation",
-        "_postman_id": "40bad507-669a-4a31-89e9-f8a7d09abbc1",
+        "_postman_id": "5e19a717-9a2a-47dc-819f-fe7ad8d509ad",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -200,6 +200,50 @@
                             ],
                             "code": 401,
                             "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update User Bio",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users\/me",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users\/me"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"bio\":{\"gender\":\"male\",\"age\":28,\"job\":\"Software Engineer\",\"company\":\"Acme Corp\",\"education\":\"B.Sc. Computer Science\",\"about\":\"Passionate about building scalable systems.\"}}"
+                        },
+                        "description": "Updates the authenticated user's bio information.\nAccepts a nested `bio` object with optional fields.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{}",
                             "name": ""
                         }
                     ]
