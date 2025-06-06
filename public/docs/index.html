@@ -84,7 +84,7 @@
                                 <a href="#endpoints-GETapi-users-me">GET api/users/me</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-users-me">
-                                <a href="#endpoints-POSTapi-users-me">Update User Bio</a>
+                                <a href="#endpoints-POSTapi-users-me">Update FCM Token</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-users-location">
                                 <a href="#endpoints-POSTapi-users-location">Change User Location</a>
@@ -103,6 +103,9 @@
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-chats--chat_id--messages">
                                 <a href="#endpoints-GETapi-chats--chat_id--messages">List Messages in Chat</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-fcm-test">
+                                <a href="#endpoints-GETapi-fcm-test">GET api/fcm-test</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-auth-register">
                                 <a href="#endpoints-POSTapi-auth-register">Register</a>
@@ -527,12 +530,13 @@ fetch(url, {
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{
- &quot;count&quot;: 5,
- &quot;distance&quot;: 50,
- &quot;origin&quot;: {
-   &quot;latitude&quot;: 43.4779751,
-   &quot;longitude&quot;: -80.5197298
- }</code>
+    &quot;count&quot;: 5,
+    &quot;distance&quot;: 50,
+    &quot;origin&quot;: {
+        &quot;latitude&quot;: 43.4779751,
+        &quot;longitude&quot;: -80.5197298
+    }
+}</code>
  </pre>
     </span>
 <span id="execution-results-GETapi-users-nearby-count" hidden>
@@ -754,13 +758,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                         </form>
 
-                    <h2 id="endpoints-POSTapi-users-me">Update User Bio</h2>
+                    <h2 id="endpoints-POSTapi-users-me">Update FCM Token</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Updates the authenticated user's bio information.
-Accepts a nested <code>bio</code> object with optional fields.</p>
+<p>Updates the Firebase Cloud Messaging (FCM) token for the authenticated user.</p>
 
 <span id="example-requests-POSTapi-users-me">
 <blockquote>Example request:</blockquote>
@@ -772,14 +776,7 @@ Accepts a nested <code>bio</code> object with optional fields.</p>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"bio\": {
-        \"gender\": \"male\",
-        \"age\": 28,
-        \"job\": \"Software Engineer\",
-        \"company\": \"Acme Corp\",
-        \"education\": \"B.Sc. Computer Science\",
-        \"about\": \"Passionate about building scalable systems.\"
-    }
+    \"fcm_token\": \"fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg...\"
 }"
 </code></pre></div>
 
@@ -795,14 +792,7 @@ const headers = {
 };
 
 let body = {
-    "bio": {
-        "gender": "male",
-        "age": 28,
-        "job": "Software Engineer",
-        "company": "Acme Corp",
-        "education": "B.Sc. Computer Science",
-        "about": "Passionate about building scalable systems."
-    }
+    "fcm_token": "fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg..."
 };
 
 fetch(url, {
@@ -819,14 +809,23 @@ fetch(url, {
         </blockquote>
                 <pre>
 
-<code class="language-json" style="max-height: 300px;">{}</code>
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;FCM token updated successfully&quot;
+}</code>
  </pre>
             <blockquote>
-            <p>Example response (201):</p>
+            <p>Example response (422):</p>
         </blockquote>
                 <pre>
 
-<code class="language-json" style="max-height: 300px;">{}</code>
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;The given data was invalid.&quot;,
+    &quot;errors&quot;: {
+        &quot;fcm_token&quot;: [
+            &quot;The fcm token field is required.&quot;
+        ]
+    }
+}</code>
  </pre>
     </span>
 <span id="execution-results-POSTapi-users-me" hidden>
@@ -846,7 +845,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-POSTapi-users-me" data-method="POST"
       data-path="api/users/me"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -900,81 +899,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                                 <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
-        <details>
-            <summary style="padding-bottom: 10px;">
-                <b style="line-height: 2;"><code>bio</code></b>&nbsp;&nbsp;
-<small>object</small>&nbsp;
+            <b style="line-height: 2;"><code>fcm_token</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
  &nbsp;
-<br>
-<p>The user's bio information.</p>
-            </summary>
-                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>gender</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
                 <input type="text" style="display: none"
-                              name="bio.gender"                data-endpoint="POSTapi-users-me"
-               value="male"
+                              name="fcm_token"                data-endpoint="POSTapi-users-me"
+               value="fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg..."
                data-component="body">
     <br>
-<p>Optional. The user's gender. Example: <code>male</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>age</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="bio.age"                data-endpoint="POSTapi-users-me"
-               value="28"
-               data-component="body">
-    <br>
-<p>Optional. The user's age. Must be between 18 and 100. Example: <code>28</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>job</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
-                <input type="text" style="display: none"
-                              name="bio.job"                data-endpoint="POSTapi-users-me"
-               value="Software Engineer"
-               data-component="body">
-    <br>
-<p>Optional. The user's job title. Example: <code>Software Engineer</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>company</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
-                <input type="text" style="display: none"
-                              name="bio.company"                data-endpoint="POSTapi-users-me"
-               value="Acme Corp"
-               data-component="body">
-    <br>
-<p>Optional. The user's company name. Example: <code>Acme Corp</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>education</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
-                <input type="text" style="display: none"
-                              name="bio.education"                data-endpoint="POSTapi-users-me"
-               value="B.Sc. Computer Science"
-               data-component="body">
-    <br>
-<p>Optional. The user's education information. Example: <code>B.Sc. Computer Science</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>about</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
-                <input type="text" style="display: none"
-                              name="bio.about"                data-endpoint="POSTapi-users-me"
-               value="Passionate about building scalable systems."
-               data-component="body">
-    <br>
-<p>Optional. A short description about the user. Example: <code>Passionate about building scalable systems.</code></p>
-                    </div>
-                                    </details>
+<p>The Firebase Cloud Messaging token for the user's device. Example: <code>fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg...</code></p>
         </div>
         </form>
 
@@ -1942,6 +1875,130 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                     </form>
 
+                    <h2 id="endpoints-GETapi-fcm-test">GET api/fcm-test</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-GETapi-fcm-test">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost/api/fcm-test" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/fcm-test"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-fcm-test">
+            <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-fcm-test" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-fcm-test"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-fcm-test"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-fcm-test" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-fcm-test">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-fcm-test" data-method="GET"
+      data-path="api/fcm-test"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-fcm-test', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-fcm-test"
+                    onclick="tryItOut('GETapi-fcm-test');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-fcm-test"
+                    onclick="cancelTryOut('GETapi-fcm-test');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-fcm-test"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/fcm-test</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-fcm-test"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-fcm-test"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
                     <h2 id="endpoints-POSTapi-auth-register">Register</h2>
 
 <p>
@@ -1965,6 +2022,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"device_name\": \"architecto\",
     \"latitude\": 4326.41688,
     \"longitude\": 4326.41688,
+    \"fcm_token\": \"fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg...\",
     \"password_confirmation\": \"architecto\"
 }"
 </code></pre></div>
@@ -1987,6 +2045,7 @@ let body = {
     "device_name": "architecto",
     "latitude": 4326.41688,
     "longitude": 4326.41688,
+    "fcm_token": "fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg...",
     "password_confirmation": "architecto"
 };
 
@@ -2142,6 +2201,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="body">
     <br>
 <p>The longitude of the user. Example: <code>4326.41688</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>fcm_token</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="fcm_token"                data-endpoint="POSTapi-auth-register"
+               value="fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg..."
+               data-component="body">
+    <br>
+<p>optional The Firebase Cloud Messaging token for the user's device. Example: <code>fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg...</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>password_confirmation</code></b>&nbsp;&nbsp;

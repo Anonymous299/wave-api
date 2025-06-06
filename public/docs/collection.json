@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "wave-api API Documentation",
-        "_postman_id": "5e19a717-9a2a-47dc-819f-fe7ad8d509ad",
+        "_postman_id": "18f19c28-8399-46c2-9d16-acd08f7f367c",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -151,7 +151,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n \"count\": 5,\n \"distance\": 50,\n \"origin\": {\n   \"latitude\": 43.4779751,\n   \"longitude\": -80.5197298\n }",
+                            "body": "{\n \"count\": 5,\n \"distance\": 50,\n \"origin\": {\n   \"latitude\": 43.4779751,\n   \"longitude\": -80.5197298\n }\n}",
                             "name": ""
                         }
                     ]
@@ -205,7 +205,7 @@
                     ]
                 },
                 {
-                    "name": "Update User Bio",
+                    "name": "Update FCM Token",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -226,24 +226,21 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"bio\":{\"gender\":\"male\",\"age\":28,\"job\":\"Software Engineer\",\"company\":\"Acme Corp\",\"education\":\"B.Sc. Computer Science\",\"about\":\"Passionate about building scalable systems.\"}}"
+                            "raw": "{\"fcm_token\":\"fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg...\"}"
                         },
-                        "description": "Updates the authenticated user's bio information.\nAccepts a nested `bio` object with optional fields.",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": "Updates the Firebase Cloud Messaging (FCM) token for the authenticated user."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{}",
+                            "body": "{\n  \"message\": \"FCM token updated successfully\"\n}",
                             "name": ""
                         },
                         {
                             "header": [],
-                            "code": 201,
-                            "body": "{}",
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"fcm_token\": [\"The fcm token field is required.\"]\n  }\n}",
                             "name": ""
                         }
                     ]
@@ -503,6 +500,54 @@
                     ]
                 },
                 {
+                    "name": "GET api\/fcm-test",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/fcm-test",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/fcm-test"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
                     "name": "Register",
                     "request": {
                         "url": {
@@ -524,7 +569,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"architecto\",\"email\":\"gbailey@example.net\",\"password\":\"|]|{+-\",\"device_name\":\"architecto\",\"latitude\":4326.41688,\"longitude\":4326.41688,\"password_confirmation\":\"architecto\"}"
+                            "raw": "{\"name\":\"architecto\",\"email\":\"gbailey@example.net\",\"password\":\"|]|{+-\",\"device_name\":\"architecto\",\"latitude\":4326.41688,\"longitude\":4326.41688,\"fcm_token\":\"fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg...\",\"password_confirmation\":\"architecto\"}"
                         },
                         "description": "Registers a new user.",
                         "auth": {

@@ -128,10 +128,31 @@ paths:
         200:
           description: ''
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
-                example: "{\n \"count\": 5,\n \"distance\": 50,\n \"origin\": {\n   \"latitude\": 43.4779751,\n   \"longitude\": -80.5197298\n }"
+                type: object
+                example:
+                  count: 5
+                  distance: 50
+                  origin:
+                    latitude: 43.4779751
+                    longitude: -80.5197298
+                properties:
+                  count:
+                    type: integer
+                    example: 5
+                  distance:
+                    type: integer
+                    example: 50
+                  origin:
+                    type: object
+                    properties:
+                      latitude:
+                        type: number
+                        example: 43.4779751
+                      longitude:
+                        type: number
+                        example: -80.5197298
       tags:
         - Endpoints
       requestBody:
@@ -172,9 +193,9 @@ paths:
         - Endpoints
       security: []
     post:
-      summary: 'Update User Bio'
-      operationId: updateUserBio
-      description: "Updates the authenticated user's bio information.\nAccepts a nested `bio` object with optional fields."
+      summary: 'Update FCM Token'
+      operationId: updateFCMToken
+      description: 'Updates the Firebase Cloud Messaging (FCM) token for the authenticated user.'
       parameters: []
       responses:
         200:
@@ -183,16 +204,36 @@ paths:
             application/json:
               schema:
                 type: object
-                example: {  }
-                properties: {  }
-        201:
+                example:
+                  message: 'FCM token updated successfully'
+                properties:
+                  message:
+                    type: string
+                    example: 'FCM token updated successfully'
+        422:
           description: ''
           content:
             application/json:
               schema:
                 type: object
-                example: {  }
-                properties: {  }
+                example:
+                  message: 'The given data was invalid.'
+                  errors:
+                    fcm_token:
+                      - 'The fcm token field is required.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The given data was invalid.'
+                  errors:
+                    type: object
+                    properties:
+                      fcm_token:
+                        type: array
+                        example:
+                          - 'The fcm token field is required.'
+                        items:
+                          type: string
       tags:
         - Endpoints
       requestBody:
@@ -202,45 +243,13 @@ paths:
             schema:
               type: object
               properties:
-                bio:
-                  type: object
-                  description: "The user's bio information."
-                  example: []
+                fcm_token:
+                  type: string
+                  description: "The Firebase Cloud Messaging token for the user's device."
+                  example: 'fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg...'
                   nullable: false
-                  properties:
-                    gender:
-                      type: string
-                      description: "Optional. The user's gender."
-                      example: male
-                      nullable: false
-                    age:
-                      type: integer
-                      description: "Optional. The user's age. Must be between 18 and 100."
-                      example: 28
-                      nullable: false
-                    job:
-                      type: string
-                      description: "Optional. The user's job title."
-                      example: 'Software Engineer'
-                      nullable: false
-                    company:
-                      type: string
-                      description: "Optional. The user's company name."
-                      example: 'Acme Corp'
-                      nullable: false
-                    education:
-                      type: string
-                      description: "Optional. The user's education information."
-                      example: 'B.Sc. Computer Science'
-                      nullable: false
-                    about:
-                      type: string
-                      description: 'Optional. A short description about the user.'
-                      example: 'Passionate about building scalable systems.'
-                      nullable: false
               required:
-                - bio
-      security: []
+                - fcm_token
   /api/users/location:
     post:
       summary: 'Change User Location'
@@ -727,6 +736,28 @@ paths:
           present:
             summary: 'When the value is present'
             value: 7d9b8e3a-1e24-4a6f-90a1-2e7b2cb80d1b
+  /api/fcm-test:
+    get:
+      summary: ''
+      operationId: getApiFcmTest
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
   /api/auth/register:
     post:
       summary: Register
@@ -779,6 +810,11 @@ paths:
                   type: number
                   description: 'The longitude of the user.'
                   example: 4326.41688
+                  nullable: false
+                fcm_token:
+                  type: string
+                  description: "optional The Firebase Cloud Messaging token for the user's device."
+                  example: 'fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg...'
                   nullable: false
                 password_confirmation:
                   type: string
