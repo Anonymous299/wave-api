@@ -55,8 +55,22 @@ Route::middleware('auth:sanctum')->group(function () {
         return response()->json(['status' => 'ok']);
     });
 
+    Route::get('message-test', function(Illuminate\Http\Request $request) {
+        $chatId = $request->input('chat_id');
+
+        $user = auth()->user();
+
+        $message = \App\Models\Message::query()->create([
+            'chat_id' => $chatId,
+            'sender_id' => $user->getKey(),
+            'body' => "this message was sent by the shadow wizard money gang\nwe love casting spells"
+        ]);
+
+        \App\Events\MessageSent::dispatch($message);
+    });
+
     Route::post('/broadcasting/auth', [\Illuminate\Broadcasting\BroadcastController::class, 'authenticate'])
-        ->middleware('auth:sanctum'); // or any guard that uses bearer tokens
+        ->middleware('auth:sanctum');
 
 });
 
