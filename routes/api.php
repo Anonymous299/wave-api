@@ -67,6 +67,8 @@ Route::middleware('auth:sanctum')->group(function () {
         ]);
 
         \App\Events\MessageSent::dispatch($message);
+
+        return response()->json(['status' => 'ok']);
     });
 
     Route::post('/broadcasting/auth', [\Illuminate\Broadcasting\BroadcastController::class, 'authenticate'])
