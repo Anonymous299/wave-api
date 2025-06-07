@@ -54,6 +54,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
         return response()->json(['status' => 'ok']);
     });
+
+    Route::post('/broadcasting/auth', [\Illuminate\Broadcasting\BroadcastController::class, 'authenticate'])
+        ->middleware('auth:sanctum'); // or any guard that uses bearer tokens
+
 });
 
 Route::prefix('auth')->name('auth.')->group(function () {
