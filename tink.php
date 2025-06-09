@@ -1,7 +1,12 @@
 <?php
 
-use Kreait\Laravel\Firebase\Facades\Firebase;
+use App\Models\User;
 
-$defaultAuth = Firebase::auth();
+$user = User::factory()->create();
 
-dump($defaultAuth);
+$chat = \App\Models\Chat::factory()->create([
+    'user_one_id' => $user->id,
+    'user_two_id' => '01975692-8478-734e-a3c0-42d6069f44c8',
+]);
+
+dd($chat);
