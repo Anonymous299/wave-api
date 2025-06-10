@@ -17,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if (config('app.env') === 'production') {
-            URL::forceHttps(true);
+            URL::forceScheme('https');
         }
 
         Swipe::observe(SwipeObserver::class);
