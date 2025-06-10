@@ -22,7 +22,7 @@ class ChatResource extends JsonResource
                 'name' => $this->userTwo->name,
             ],
             'created_at' => $this->created_at,
-            'messages' => $this->messages()->limit(5)->latest()->get(),
+            'messages' => $this->messages()->limit(25)->latest()->get(),
         ];
     }
 }
