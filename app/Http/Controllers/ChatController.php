@@ -129,6 +129,6 @@ class ChatController extends Controller
      */
     public function messages(Chat $chat): AnonymousResourceCollection
     {
-        return MessageResource::collection($chat->messages()->paginate(25));
+        return MessageResource::collection($chat->messages()->latest()->paginate(25));
     }
 }

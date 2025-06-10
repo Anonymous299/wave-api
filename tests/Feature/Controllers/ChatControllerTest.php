@@ -129,6 +129,37 @@ class ChatControllerTest extends TestCase
         $this->assertCount(25, $response->json('data'));
     }
 
+    public function test_it_returns_chats_in_correct_order()
+    {
+        $userOne = User::factory()->create();
+        $userTwo = User::factory()->create();
+
+        $chat = Chat::query()->create([
+            'user_one_id' => $userOne->getKey(),
+            'user_two_id' => $userTwo->getKey(),
+        ]);
+
+        $newerMessage = Message::factory()->create([
+            'chat_id'    => $chat->getKey(),
+            'sender_id'  => $userOne->getKey(),
+            'body'       => 'Hello from user one',
+            'created_at' => Carbon::now(),
+        ]);
+        $olderMessage = Message::factory()->create([
+            'chat_id'    => $chat->getKey(),
+            'sender_id'  => $userOne->getKey(),
+            'body'       => 'Hello from user one',
+            'created_at' => Carbon::now()->subDay(),
+        ]);
+
+        $response = $this->actingAs($userOne)
+            ->getJson("/api/chats/{$chat->getKey()}/messages");
+
+        $response->assertOk();
+        $this->assertEquals($response->json('data')[0]['id'], $newerMessage->getKey());
+        $this->assertEquals($response->json('data')[1]['id'], $olderMessage->getKey());
+    }
+
     public function test_chat_messages_returns_not_found_for_invalid_chat()
     {
         $user = User::factory()->create();
