@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -29,7 +30,7 @@ class UpdateUserController extends Controller
      * @response 200 {}
      * @response 201 {}
      */
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request): UserResource
     {
         $validated = $request->validate([
             'fcm_token'     => 'string',
@@ -80,6 +81,6 @@ class UpdateUserController extends Controller
             $user->update(['intention' => $request->input('intention')]);
         }
 
-        return $bio && $bio->wasRecentlyCreated ? response()->json([], 201) : response()->json([]);
+        return new UserResource($user->refresh());
     }
 }

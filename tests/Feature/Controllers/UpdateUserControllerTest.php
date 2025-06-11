@@ -14,6 +14,7 @@ class UpdateUserControllerTest extends TestCase
 
     public function test_it_creates_bio_if_non_existent()
     {
+        $this->assertDatabaseCount('bios', 0);
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)->postJson('/api/users/me', [
@@ -28,7 +29,7 @@ class UpdateUserControllerTest extends TestCase
         ]);
 
         $response->assertSuccessful();
-        $response->assertCreated();
+        $this->assertDatabaseCount('bios', 1);
     }
 
     public function test_it_updates_bio_if_exists()
