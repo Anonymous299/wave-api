@@ -105,4 +105,33 @@ class GetNearbyUsersControllerTest extends TestCase
         $response->assertOk();
         $response->assertJsonCount(1);
     }
+
+    public function test_it_only_returns_users_with_matching_intention()
+    {
+        $authUser = User::factory()->create([
+            'intention' => 'intimacy',
+            'location'  => Point::makeGeodetic(self::TEST_LAT_A, self::TEST_LNG_A),
+        ]);
+
+        $matchingUser = User::factory()->create([
+            'intention' => 'intimacy',
+            'location'  => Point::makeGeodetic(self::TEST_LAT_B, self::TEST_LNG_B),
+        ]);
+
+        $nonMatchingUser = User::factory()->create([
+            'intention' => 'business',
+            'location'  => Point::makeGeodetic(self::TEST_LAT_B, self::TEST_LNG_B),
+        ]);
+
+        $response = $this->actingAs($authUser)->getJson(route('users.nearby', [
+            'latitude'  => self::TEST_LAT_A,
+            'longitude' => self::TEST_LNG_A,
+            'distance'  => 5,
+        ]));
+
+        $response->assertOk();
+        $response->assertJsonCount(1, 'data');
+        $response->assertJsonFragment(['id' => $matchingUser->getKey()]);
+        $response->assertJsonMissing(['id' => $nonMatchingUser->getKey()]);
+    }
 }

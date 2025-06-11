@@ -48,6 +48,7 @@ class GetNearbyUserCountController extends Controller
             ->where(
                 ST::distanceSphere($origin, 'location'), '<=', $distanceInKm * 1000
             )
+            ->where('intention', $authUser->intention)
             ->where('id', '!=', $authUser->getKey())
             ->count();
 

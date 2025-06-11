@@ -810,6 +810,7 @@ Accepts a nested <code>bio</code> object with optional fields.</p>
     --header "Accept: application/json" \
     --data "{
     \"fcm_token\": \"fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg\",
+    \"intention\": \"intimacy\",
     \"bio\": {
         \"gender\": \"male\",
         \"age\": 28,
@@ -837,6 +838,7 @@ const headers = {
 
 let body = {
     "fcm_token": "fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg",
+    "intention": "intimacy",
     "bio": {
         "gender": "male",
         "age": 28,
@@ -954,6 +956,19 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="body">
     <br>
 <p>Optional. The Firebase Cloud Messaging token for the user's device. Example: <code>fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>intention</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="intention"                data-endpoint="POSTapi-users-me"
+               value="intimacy"
+               data-component="body">
+    <br>
+<p>Example: <code>intimacy</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>intimacy</code></li> <li><code>business</code></li> <li><code>friendship</code></li></ul>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
         <details>

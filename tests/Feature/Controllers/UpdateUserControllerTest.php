@@ -106,4 +106,18 @@ class UpdateUserControllerTest extends TestCase
         $this->assertTrue(Storage::disk('public')->exists($user->bio->images[0]));
     }
 
+    public function test_it_updates_intention()
+    {
+        $user = User::factory()->create(['intention' => 'friendship']);
+
+        $response = $this->actingAs($user)->postJson('/api/users/me', [
+            'intention' => 'intimacy',
+        ]);
+
+        $response->assertOk();
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'intention' => 'intimacy',
+        ]);
+    }
 }

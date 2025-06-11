@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "wave-api API Documentation",
-        "_postman_id": "d7cb8c11-11d7-45d6-b2ed-5f0834eba113",
+        "_postman_id": "a783989a-d16f-425e-a2ef-b66041017b29",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -226,7 +226,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"fcm_token\":\"fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg\",\"bio\":{\"gender\":\"male\",\"age\":28,\"job\":\"Software Engineer\",\"company\":\"Acme Corp\",\"education\":\"B.Sc. Computer Science\",\"about\":\"Passionate about building scalable systems.\",\"images\":[\"architecto\"]}}"
+                            "raw": "{\"fcm_token\":\"fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg\",\"intention\":\"intimacy\",\"bio\":{\"gender\":\"male\",\"age\":28,\"job\":\"Software Engineer\",\"company\":\"Acme Corp\",\"education\":\"B.Sc. Computer Science\",\"about\":\"Passionate about building scalable systems.\",\"images\":[\"architecto\"]}}"
                         },
                         "description": "Updates the authenticated user's bio information.\nAccepts a nested `bio` object with optional fields.",
                         "auth": {

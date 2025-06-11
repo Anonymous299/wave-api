@@ -33,6 +33,7 @@ class UpdateUserController extends Controller
     {
         $validated = $request->validate([
             'fcm_token'     => 'string',
+            'intention'     => 'string|in:intimacy,business,friendship',
             'bio.gender'    => 'string',
             'bio.age'       => 'numeric|min:18|max:100',
             'bio.job'       => 'string',
@@ -73,6 +74,10 @@ class UpdateUserController extends Controller
 
         if ($request->input('fcm_token')) {
             $user->update(['fcm_token' => $request->input('fcm_token')]);
+        }
+
+        if ($request->input('intention')) {
+            $user->update(['intention' => $request->input('intention')]);
         }
 
         return $bio && $bio->wasRecentlyCreated ? response()->json([], 201) : response()->json([]);

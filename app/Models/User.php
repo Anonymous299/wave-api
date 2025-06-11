@@ -18,6 +18,12 @@ class User extends Authenticatable
     use HasApiTokens;
     use HasUuids;
 
+    public const INTENTIONS = [
+        'intimacy',
+        'business',
+        'friendship'
+    ];
+
     protected $with = ['bio'];
 
     protected $guarded = [];

@@ -346,6 +346,15 @@ paths:
                   description: "Optional. The Firebase Cloud Messaging token for the user's device."
                   example: 'fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg'
                   nullable: false
+                intention:
+                  type: string
+                  description: ''
+                  example: intimacy
+                  nullable: false
+                  enum:
+                    - intimacy
+                    - business
+                    - friendship
                 bio:
                   type: object
                   description: "The user's bio information."
