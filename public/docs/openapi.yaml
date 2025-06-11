@@ -382,6 +382,13 @@ paths:
                       description: 'Optional. A short description about the user.'
                       example: 'Passionate about building scalable systems.'
                       nullable: false
+                    images:
+                      type: array
+                      description: ''
+                      example:
+                        - architecto
+                      items:
+                        type: string
               required:
                 - bio
       security: []
@@ -890,6 +897,38 @@ paths:
                   message:
                     type: string
                     example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/message-test:
+    get:
+      summary: ''
+      operationId: getApiMessageTest
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/broadcasting/auth:
+    post:
+      summary: 'Authenticate the request for channel access.'
+      operationId: authenticateTheRequestForChannelAccess
+      description: ''
+      parameters: []
+      responses: {  }
       tags:
         - Endpoints
       security: []

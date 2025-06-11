@@ -5,6 +5,7 @@ namespace Tests\Feature\Controllers;
 use App\Models\User;
 use Clickbar\Magellan\Data\Geometries\Point;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class UpdateUserControllerTest extends TestCase
@@ -71,7 +72,7 @@ class UpdateUserControllerTest extends TestCase
         $response->assertOk();
 
         $this->assertDatabaseHas('users', [
-            'id' => $user->id,
+            'id'        => $user->id,
             'fcm_token' => $token,
         ]);
     }
@@ -84,4 +85,25 @@ class UpdateUserControllerTest extends TestCase
 
         $response->assertUnauthorized();
     }
+
+    public function test_it_stores_uploaded_images_as_paths_in_bio()
+    {
+        $user = User::factory()->create();
+
+        $base64Image = 'data:image/png;base64,' . base64_encode(file_get_contents(__DIR__ . '/Fixtures/test.png'));
+
+        $response = $this->actingAs($user)->postJson('/api/users/me', [
+            'bio' => [
+                'images' => [$base64Image],
+            ],
+        ]);
+
+        $response->assertSuccessful();
+
+        $this->assertDatabaseCount('bios', 1);
+        $this->assertNotEmpty($user->fresh()->bio->images);
+        $this->assertStringStartsWith('bio_images/', $user->bio->images[0]);
+        $this->assertTrue(Storage::disk('public')->exists($user->bio->images[0]));
+    }
+
 }

@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class UpdateUserController extends Controller
 {
@@ -37,14 +39,36 @@ class UpdateUserController extends Controller
             'bio.company'   => 'string',
             'bio.education' => 'string',
             'bio.about'     => 'string',
+            'bio.images'    => 'array',
+            'bio.images.*'  => 'string', // base64 strings
         ]);
 
         /** @var User $user */
         $user = auth()->user();
         $bioArray = Arr::get($validated, 'bio');
+
+        if (isset($bioArray['images']) && is_array($bioArray['images'])) {
+            $storedPaths = [];
+
+            foreach ($bioArray['images'] as $base64Image) {
+                if (preg_match('/^data:image\/(\w+);base64,/', $base64Image, $type)) {
+                    $image = substr($base64Image, strpos($base64Image, ',') + 1);
+                    $image = base64_decode($image);
+
+                    $extension = strtolower($type[1]);
+                    $filename = 'bio_images/' . Str::uuid() . '.' . $extension;
+
+                    Storage::disk('public')->put($filename, $image);
+                    $storedPaths[] = $filename;
+                }
+            }
+
+            $bioArray['images'] = $storedPaths;
+        }
+
         $bio = null;
         if ($bioArray) {
-            $bio = $user->bio()->updateOrCreate([], Arr::get($validated, 'bio'));
+            $bio = $user->bio()->updateOrCreate([], $bioArray);
         }
 
         if ($request->input('fcm_token')) {

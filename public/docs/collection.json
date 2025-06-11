@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "wave-api API Documentation",
-        "_postman_id": "037f2ee8-b9dd-49d6-811c-381619048576",
+        "_postman_id": "d7cb8c11-11d7-45d6-b2ed-5f0834eba113",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -226,7 +226,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"fcm_token\":\"fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg\",\"bio\":{\"gender\":\"male\",\"age\":28,\"job\":\"Software Engineer\",\"company\":\"Acme Corp\",\"education\":\"B.Sc. Computer Science\",\"about\":\"Passionate about building scalable systems.\"}}"
+                            "raw": "{\"fcm_token\":\"fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg\",\"bio\":{\"gender\":\"male\",\"age\":28,\"job\":\"Software Engineer\",\"company\":\"Acme Corp\",\"education\":\"B.Sc. Computer Science\",\"about\":\"Passionate about building scalable systems.\",\"images\":[\"architecto\"]}}"
                         },
                         "description": "Updates the authenticated user's bio information.\nAccepts a nested `bio` object with optional fields.",
                         "auth": {
@@ -549,6 +549,82 @@
                             "name": ""
                         }
                     ]
+                },
+                {
+                    "name": "GET api\/message-test",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/message-test",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/message-test"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Authenticate the request for channel access.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/broadcasting\/auth",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/broadcasting\/auth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
                 },
                 {
                     "name": "Register",

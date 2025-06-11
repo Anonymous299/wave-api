@@ -13,6 +13,9 @@ class Bio extends Model
     use HasUuids;
 
     protected $guarded = [];
+    protected $casts = [
+        'images' => 'array'
+    ];
 
     public function user(): BelongsTo
     {
