@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\Chat;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -13,7 +14,7 @@ class MatchCreated extends Notification
 {
     use Queueable;
 
-    public function __construct(private readonly User $matchedWith)
+    public function __construct(private readonly User $matchedWith, private readonly Chat $chat)
     {
     }
 
@@ -31,25 +32,8 @@ class MatchCreated extends Notification
                 image: 'https://placehold.co/400' // Optional, replace with matched user's avatar if available
             )
         ))->custom([
-            'android' => [
-                'notification' => [
-                    'color' => '#0A0A0A',
-                    'sound' => 'default',
-                ],
-                'fcm_options'  => [
-                    'analytics_label' => 'match_android',
-                ],
-            ],
-            'apns' => [
-                'payload' => [
-                    'aps' => [
-                        'sound' => 'default',
-                    ],
-                ],
-                'fcm_options' => [
-                    'analytics_label' => 'match_ios',
-                ],
-            ],
+            'chat_id'   => $this->chat->getKey(),
+            'intention' => $this->matchedWith->intention,
         ]);
     }
 }
