@@ -21,6 +21,7 @@ class UserResource extends JsonResource
             "updated_at"        => $this->updated_at,
             "fcm_token"         => $this->fcm_token,
             "distance"          => $this->distance / 1000,
+            "intention"         => $this->intention,
             "bio"               => new BioResource($this->bio)
         ];
     }
