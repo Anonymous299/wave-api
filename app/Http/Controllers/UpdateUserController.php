@@ -33,6 +33,7 @@ class UpdateUserController extends Controller
     public function __invoke(Request $request): UserResource
     {
         $validated = $request->validate([
+            'name'          => 'string|max:255',
             'fcm_token'     => 'string',
             'intention'     => 'string|in:intimacy,business,friendship',
             'bio.gender'    => 'string',
@@ -79,6 +80,10 @@ class UpdateUserController extends Controller
 
         if ($request->input('intention')) {
             $user->update(['intention' => $request->input('intention')]);
+        }
+
+        if ($request->input('name')) {
+            $user->update(['name' => $request->input('name')]);
         }
 
         return new UserResource($user->refresh());

@@ -121,4 +121,19 @@ class UpdateUserControllerTest extends TestCase
             'intention' => 'intimacy',
         ]);
     }
+
+    public function test_it_updates_name()
+    {
+        $user = User::factory()->create(['name' => null]);
+
+        $response = $this->actingAs($user)->postJson('/api/users/me', [
+            'name' => 'John Doe',
+        ]);
+
+        $response->assertOk();
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'name' => 'John Doe',
+        ]);
+    }
 }
