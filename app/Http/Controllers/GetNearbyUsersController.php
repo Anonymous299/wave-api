@@ -87,6 +87,7 @@ class GetNearbyUsersController extends Controller
             ->where('id', '!=', $authUser->getKey())
             ->whereNotIn('id', $userHasSwipedOn)
             ->where('intention', $authUser->intention)
+            ->whereNotNull('name')
             ->orderBy('distance')
             ->get());
     }
