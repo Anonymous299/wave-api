@@ -28,7 +28,7 @@ class MatchCreated extends Notification
         return (new FcmMessage(
             notification: new FcmNotification(
                 title: 'It’s a Match!',
-                body: "You and {$this->matchedWith->name} liked each other.",
+                body: "You and {$this->matchedWith->name} have connected.",
                 image: 'https://placehold.co/400'
             )
         ))
