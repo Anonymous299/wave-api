@@ -59,13 +59,8 @@ class StoreSwipeController extends Controller
                 'user_two_id' => $swipe->swipee->getKey(),
             ]);
 
-            Log::info('Match created', [
-                'swiper_id' => $swipe->swiper->getKey(),
-                'swipee_id' => $swipe->swipee->getKey(),
-                'chat_id' => $chat->getKey(),
-            ]);
             $swipe->swiper->notify(new MatchCreated($swipe->swipee, $chat));
-            // $swipe->swipee->notify(new MatchCreated($swipe->swiper, $chat));
+            $swipe->swipee->notify(new MatchCreated($swipe->swiper, $chat));
         }
 
         return response()->json([
