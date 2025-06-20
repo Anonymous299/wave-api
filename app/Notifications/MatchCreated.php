@@ -12,6 +12,8 @@ use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
 class MatchCreated extends Notification
 {
+
+
     use Queueable;
 
     public function __construct(private readonly User $matchedWith, private readonly Chat $chat)
@@ -25,9 +27,19 @@ class MatchCreated extends Notification
 
     public function toFcm(object $notifiable): FcmMessage
     {
+         $emojiMap = [
+    'intimacy' => '💜',
+    'business' => '💼',
+    'friendship' => 🤝
+    // add more as needed
+];
+
+$intention = $this->matchedWith->bio?->intention ?? '';
+$emoji = $emojiMap[strtolower($intention)] ?? '';
+
         return (new FcmMessage(
             notification: new FcmNotification(
-                title: 'It’s a Match!',
+                title: 'Successful connection' . ($emoji ? " $emoji" : ''),
                 body: "You and {$this->matchedWith->name} have connected.",
                 image: 'https://placehold.co/400'
             )
