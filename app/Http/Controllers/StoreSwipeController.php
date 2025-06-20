@@ -63,10 +63,10 @@ class StoreSwipeController extends Controller
             $swipe->swipee->notify(new MatchCreated($swipe->swiper, $chat));
         }
 
-        else{
+        // else{
              
-            $swipe->$swipee->notify(new UserWaved($swipe->swiper));
-        }
+        //     $swipe->$swipee->notify(new UserWaved($swipe->swiper));
+        // }
 
         return response()->json([
             'swipe'   => $swipe->toArray(),
