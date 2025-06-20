@@ -64,12 +64,8 @@ class StoreSwipeController extends Controller
         }
 
         else{
-             $chat = Chat::query()->create([
-                'user_one_id' => $swipe->swiper->getKey(),
-                'user_two_id' => $swipe->swipee->getKey(),
-            ]);
-            // $swipe->$swipee->notify(new UserWaved($swipe->swiper));
-             $swipe->swipee->notify(new MatchCreated($swipe->swiper, $chat));
+             
+            $swipe->$swipee->notify(new UserWaved($swipe->swiper));
         }
 
         return response()->json([
