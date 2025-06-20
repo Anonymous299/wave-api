@@ -29,12 +29,12 @@ $emoji = $emojiMap[strtolower($intention)] ?? '';
         return (new FcmMessage(
             notification: new FcmNotification(
                 title: "You've received a Wave! " . ($emoji ? " $emoji" : ''),
-                body: "{$this->matchedWith->name} waved at you!",
+                body: "{$this->wavedBy->name} waved at you!",
                 image: 'https://placehold.co/400'
             )
         ))
             ->data([
-                'user_id' => $this->matchedWith->getKey(),
+                'user_id' => $this->wavedBy->getKey(),
             ])
             ->custom([
                 'android' => [
