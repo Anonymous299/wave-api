@@ -1,22 +1,11 @@
 <?php
-
-namespace App\Notifications;
-
-use App\Models\Chat;
-use App\Models\User;
-use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
-use NotificationChannels\Fcm\FcmChannel;
-use NotificationChannels\Fcm\FcmMessage;
-use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
-
-class MatchCreated extends Notification
+class UserWaved extends Notification
 {
 
 
     use Queueable;
 
-    public function __construct(private readonly User $matchedWith, private readonly Chat $chat)
+    public function __construct(private readonly User $wavedBy)
     {
     }
 
@@ -34,19 +23,18 @@ class MatchCreated extends Notification
     // add more as needed
 ];
 
-$intention = $this->matchedWith->intention ?? '';
+$intention = $this->wavedBy->intention ?? '';
 $emoji = $emojiMap[strtolower($intention)] ?? '';
 
         return (new FcmMessage(
             notification: new FcmNotification(
-                title: 'Successful connection' . ($emoji ? " $emoji" : ''),
-                body: "You and {$this->matchedWith->name} have connected.",
+                title: "You've received a Wave! " . ($emoji ? " $emoji" : ''),
+                body: "{$this->matchedWith->name} waved at you!",
                 image: 'https://placehold.co/400'
             )
         ))
             ->data([
-                'chat_id' => $this->chat->id,
-                'intention' => $this->matchedWith->intention ?? '',
+                'user_id' => $this->matchedWith->getKey(),
             ])
             ->custom([
                 'android' => [
@@ -71,4 +59,3 @@ $emoji = $emojiMap[strtolower($intention)] ?? '';
             ]);
     }
 }
-
