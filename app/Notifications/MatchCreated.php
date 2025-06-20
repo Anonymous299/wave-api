@@ -30,7 +30,7 @@ class MatchCreated extends Notification
          $emojiMap = [
     'intimacy' => '💜',
     'business' => '💼',
-    'friendship' => 🤝
+    'friendship' => '🤝'
     // add more as needed
 ];
 
