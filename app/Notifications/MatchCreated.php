@@ -25,15 +25,8 @@ class MatchCreated extends Notification
 
     public function toFcm(object $notifiable): FcmMessage
     {
-        $emojiMap = [
-            'intimacy'   => '💜',
-            'business'   => '💼',
-            'friendship' => '🤝'
-            // add more as needed
-        ];
-
         $intention = $this->matchedWith->intention ?? '';
-        $emoji = $emojiMap[strtolower($intention)] ?? '';
+        $emoji = User::INTENTION_EMOJI_MAP[strtolower($intention)] ?? '';
 
         return (new FcmMessage(
             notification: new FcmNotification(
