@@ -9,14 +9,12 @@ use App\Http\Resources\UserResource;
 
 class ShowUserController extends Controller
 {
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request): UserResource
     {
-        $request->validate([
-            'id' => 'required|string',
-        ]);
+        $request->validate(['id' => 'required|string']);
 
-        $user = User::findOrFail($request->input('id'));
+        $user = User::query()->findOrFail($request->input('id'));
 
-        return response()->json(new UserResource($user));
+        return new UserResource($user);
     }
 }
