@@ -11,6 +11,7 @@ use App\Http\Controllers\StoreSwipeController;
 use App\Http\Controllers\UpdateUserController;
 use App\Http\Controllers\UpdateFcmTokenController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ShowUserController;
 
 /**
  * Health
@@ -30,6 +31,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('location', ChangeUserLocationController::class)
             ->name('location.update');
+
+        Route::get('user', ShowUserController::class)->name('user');
     });
 
     Route::prefix('swipes')->name('swipes.')->group(function () {
