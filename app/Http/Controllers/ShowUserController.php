@@ -12,7 +12,7 @@ class ShowUserController extends Controller
     public function __invoke(Request $request): JsonResponse
     {
         $request->validate([
-           'id' => 'required|string',
+            'id' => 'required|string',
         ]);
 
         $user = User::findOrFail($request->input('id'));

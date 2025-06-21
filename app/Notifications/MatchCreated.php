@@ -12,8 +12,6 @@ use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
 class MatchCreated extends Notification
 {
-
-
     use Queueable;
 
     public function __construct(private readonly User $matchedWith, private readonly Chat $chat)
@@ -27,15 +25,15 @@ class MatchCreated extends Notification
 
     public function toFcm(object $notifiable): FcmMessage
     {
-         $emojiMap = [
-    'intimacy' => '💜',
-    'business' => '💼',
-    'friendship' => '🤝'
-    // add more as needed
-];
+        $emojiMap = [
+            'intimacy'   => '💜',
+            'business'   => '💼',
+            'friendship' => '🤝'
+            // add more as needed
+        ];
 
-$intention = $this->matchedWith->intention ?? '';
-$emoji = $emojiMap[strtolower($intention)] ?? '';
+        $intention = $this->matchedWith->intention ?? '';
+        $emoji = $emojiMap[strtolower($intention)] ?? '';
 
         return (new FcmMessage(
             notification: new FcmNotification(
@@ -45,9 +43,9 @@ $emoji = $emojiMap[strtolower($intention)] ?? '';
             )
         ))
             ->data([
-                'chat_id' => $this->chat->id,
+                'chat_id'   => $this->chat->id,
                 'intention' => $this->matchedWith->intention ?? '',
-                'type' => 'match'
+                'type'      => 'match'
             ])
             ->custom([
                 'android' => [
@@ -59,8 +57,8 @@ $emoji = $emojiMap[strtolower($intention)] ?? '';
                         'analytics_label' => 'match_android',
                     ],
                 ],
-                'apns' => [
-                    'payload' => [
+                'apns'    => [
+                    'payload'     => [
                         'aps' => [
                             'sound' => 'default',
                         ],

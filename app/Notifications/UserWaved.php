@@ -11,11 +11,8 @@ use NotificationChannels\Fcm\FcmMessage;
 use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
 
-
 class UserWaved extends Notification
 {
-
-
     use Queueable;
 
     public function __construct(private readonly User $wavedBy)
@@ -29,15 +26,15 @@ class UserWaved extends Notification
 
     public function toFcm(object $notifiable): FcmMessage
     {
-         $emojiMap = [
-    'intimacy' => '💜',
-    'business' => '💼',
-    'friendship' => '🤝'
-    // add more as needed
-];
+        $emojiMap = [
+            'intimacy'   => '💜',
+            'business'   => '💼',
+            'friendship' => '🤝'
+            // add more as needed
+        ];
 
-$intention = $this->wavedBy->intention ?? '';
-$emoji = $emojiMap[strtolower($intention)] ?? '';
+        $intention = $this->wavedBy->intention ?? '';
+        $emoji = $emojiMap[strtolower($intention)] ?? '';
 
         return (new FcmMessage(
             notification: new FcmNotification(
@@ -48,7 +45,7 @@ $emoji = $emojiMap[strtolower($intention)] ?? '';
         ))
             ->data([
                 'user_id' => $this->wavedBy->getKey(),
-                'type' => 'wave'
+                'type'    => 'wave'
             ])
             ->custom([
                 'android' => [
@@ -60,8 +57,8 @@ $emoji = $emojiMap[strtolower($intention)] ?? '';
                         'analytics_label' => 'match_android',
                     ],
                 ],
-                'apns' => [
-                    'payload' => [
+                'apns'    => [
+                    'payload'     => [
                         'aps' => [
                             'sound' => 'default',
                         ],
