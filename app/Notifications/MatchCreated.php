@@ -47,6 +47,7 @@ $emoji = $emojiMap[strtolower($intention)] ?? '';
             ->data([
                 'chat_id' => $this->chat->id,
                 'intention' => $this->matchedWith->intention ?? '',
+                'type' => 'match'
             ])
             ->custom([
                 'android' => [

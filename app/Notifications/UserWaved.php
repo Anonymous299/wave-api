@@ -48,6 +48,7 @@ $emoji = $emojiMap[strtolower($intention)] ?? '';
         ))
             ->data([
                 'user_id' => $this->wavedBy->getKey(),
+                'type' => 'wave'
             ])
             ->custom([
                 'android' => [

@@ -65,7 +65,7 @@ class StoreSwipeController extends Controller
         }
 
         else{
-            $swipe->swipee->notify(new UserWaved($swipe->swipee));
+            $swipe->swipee->notify(new UserWaved($swipe->swiper));
         }
 
         return response()->json([
