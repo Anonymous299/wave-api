@@ -63,8 +63,7 @@ class StoreSwipeController extends Controller
             $swipe->swiper->notify(new MatchCreated($swipe->swipee, $chat));
             $swipe->swipee->notify(new MatchCreated($swipe->swiper, $chat));
         }
-
-        if ($request->direction == 'right') {
+        else if ($request->direction == 'right') {
             $swipe->swipee->notify(new UserWaved($swipe->swiper));
         }
 

@@ -64,6 +64,10 @@ class User extends Authenticatable
 
     public function chats(): HasMany
     {
+//        return Chat::query()
+//            ->where('user_one_id', $this->getKey())
+//            ->orWhere('user_two_id', $this->getKey());
+
         return $this->hasMany(Chat::class, 'user_one_id')
             ->orWhere('user_two_id', $this->getKey());
     }
