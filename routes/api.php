@@ -58,6 +58,12 @@ Route::middleware('auth:sanctum')->group(function () {
         return response()->json(['status' => 'ok']);
     });
 
+    Route::get('/fcm-test-waved', function(Illuminate\Http\Request $request) {
+        auth()->user()->notify(new \App\Notifications\UserWaved(\App\Models\User::query()->firstOrFail()));
+
+        return response()->json(['status' => 'ok']);
+    });
+
     Route::get('message-test', function(Illuminate\Http\Request $request) {
         $chatId = $request->input('chat_id');
 
