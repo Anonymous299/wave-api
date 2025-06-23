@@ -32,13 +32,8 @@ class MatchCreated extends Notification
             notification: new FcmNotification(
                 title: 'Successful connection' . ($emoji ? " $emoji" : ''),
                 body: "You and {$this->matchedWith->name} have connected.",
-                image: asset('images/wave_logo_400.png')
+                // image: asset('images/wave_logo_400.png')
             ),
-            data: [
-        'fcm_options' => [
-            'image' => asset('images/wave_logo_400.png'),
-        ],
-    ]
         ))
             ->data([
                 'chat_id'   => $this->chat->id,
