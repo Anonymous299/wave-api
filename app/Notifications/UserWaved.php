@@ -33,7 +33,6 @@ class UserWaved extends Notification
             notification: new FcmNotification(
                 title: "You've received a Wave! " . ($emoji ? " $emoji" : ''),
                 body: "{$this->wavedBy->name} waved at you!",
-                image: asset('images/wave_logo_400.png')
             )
         ))
             ->data([
