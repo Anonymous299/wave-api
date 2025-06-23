@@ -32,7 +32,7 @@ class MatchCreated extends Notification
             notification: new FcmNotification(
                 title: 'Successful connection' . ($emoji ? " $emoji" : ''),
                 body: "You and {$this->matchedWith->name} have connected.",
-                image: config('app.url') . '/images/wave_logo_400.png'
+                image: asset('images/wave_logo_400.png')
             )
         ))
             ->data([
