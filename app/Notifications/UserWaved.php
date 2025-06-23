@@ -53,6 +53,7 @@ class UserWaved extends Notification
                     'payload'     => [
                         'aps' => [
                             'sound' => 'default',
+                            'content-available' => 1
                         ],
                     ],
                     'fcm_options' => [

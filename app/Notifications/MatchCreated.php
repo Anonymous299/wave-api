@@ -53,7 +53,6 @@ class MatchCreated extends Notification
                     'payload'     => [
                         'aps' => [
                             'sound' => 'default',
-                            'mutable-content' => 1,
                             'content-available' => 1
                         ],
                     ],
