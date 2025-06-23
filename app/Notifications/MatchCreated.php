@@ -54,6 +54,7 @@ class MatchCreated extends Notification
                         'aps' => [
                             'sound' => 'default',
                             'mutable-content' => 1,
+                            'content-available' => 1
                         ],
                     ],
                     'fcm_options' => [
