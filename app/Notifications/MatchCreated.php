@@ -58,6 +58,7 @@ class MatchCreated extends Notification
                     ],
                     'fcm_options' => [
                         'analytics_label' => 'match_ios',
+                        'image' => asset('images/wave_logo_400.png'),
                     ],
                 ],
             ]);
