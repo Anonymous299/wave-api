@@ -16,12 +16,12 @@ class ChatResource extends JsonResource
             'user_one'   => [
                 'id'        => $this->userOne->id,
                 'name'      => $this->userOne->name,
-                'image_url' => $this->userOne->bio->image_url ?? null,
+                'image_url' => $this->userOne->bio->images ?? null,
             ],
             'user_two'   => [
                 'id'        => $this->userTwo->id,
                 'name'      => $this->userTwo->name,
-                'image_url' => $this->userTwo->bio->image_url ?? null,
+                'image_url' => $this->userTwo->bio->images ?? null,
             ],
             'created_at' => $this->created_at,
             'messages'   => $this->messages()->limit(5)->latest()->get(),
