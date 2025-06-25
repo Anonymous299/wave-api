@@ -61,8 +61,8 @@ class UpdateUserController extends Controller
                     $extension = strtolower($type[1]);
                     $filename = 'bio_images/' . Str::uuid() . '.' . $extension;
 
-                    Storage::disk('s3')->put($filename, $image);
-                    $storedPaths[] = $filename;
+                    Storage::put($filename, $image);
+                    $storedPaths[] = Storage::url($filename);
                 }
             }
 
