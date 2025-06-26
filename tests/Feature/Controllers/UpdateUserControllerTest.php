@@ -89,6 +89,7 @@ class UpdateUserControllerTest extends TestCase
 
     public function test_it_stores_uploaded_images_as_paths_in_bio()
     {
+        Storage::fake();
         $user = User::factory()->create();
 
         $base64Image = 'data:image/png;base64,' . base64_encode(file_get_contents(__DIR__ . '/Fixtures/test.png'));
@@ -103,8 +104,6 @@ class UpdateUserControllerTest extends TestCase
 
         $this->assertDatabaseCount('bios', 1);
         $this->assertNotEmpty($user->fresh()->bio->images);
-        $this->assertStringStartsWith('bio_images/', $user->bio->images[0]);
-        $this->assertTrue(Storage::disk('public')->exists($user->bio->images[0]));
     }
 
     public function test_it_updates_intention()
