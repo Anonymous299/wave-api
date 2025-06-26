@@ -78,6 +78,65 @@ class StoreMessageControllerTest extends TestCase
         ]);
     }
 
+    public function test_messages_end_up_in_correct_chats()
+    {
+        $userOne = User::factory()->create();
+        $userTwo = User::factory()->create();
+        $userThree = User::factory()->create();
+
+        $chat = Chat::query()->create([
+            'user_one_id' => $userOne->getKey(),
+            'user_two_id' => $userTwo->getKey(),
+        ]);
+
+        $chatTwo = Chat::query()->create([
+            'user_one_id' => $userOne->getKey(),
+            'user_two_id' => $userThree->getKey(),
+        ]);
+
+        $this->actingAs($userOne)->postJson('/api/messages', [
+            'chat_id' => $chat->getKey(),
+            'body'    => 'Hello, world.',
+        ])->assertCreated();
+
+        $this->actingAs($userOne)->postJson('/api/messages', [
+            'chat_id' => $chatTwo->getKey(),
+            'body'    => 'Hi there!',
+        ])->assertCreated();
+
+        $this->assertDatabaseCount('messages', 2);
+
+        $this->assertDatabaseHas('messages', [
+            'chat_id'   => $chat->getKey(),
+            'sender_id' => $userOne->getKey(),
+            'body'      => 'Hello, world.',
+        ]);
+
+        $this->assertDatabaseHas('messages', [
+            'chat_id'   => $chatTwo->getKey(),
+            'sender_id' => $userOne->getKey(),
+            'body'      => 'Hi there!',
+        ]);
+    }
+
+    public function test_it_rejects_if_user_not_in_chat()
+    {
+        $userOne = User::factory()->create();
+        $userTwo = User::factory()->create();
+
+        $chat = Chat::query()->create([
+            'user_one_id' => $userOne->getKey(),
+            'user_two_id' => $userTwo->getKey(),
+        ]);
+
+        $unrelatedUser = User::factory()->create();
+
+        $this->actingAs($unrelatedUser)->postJson('/api/messages', [
+            'chat_id' => $chat->getKey(),
+            'body'    => 'This should not work',
+        ])->assertNotFound();
+    }
+
     public static function provideInvalidParameters(): array
     {
         return [

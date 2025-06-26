@@ -24,6 +24,13 @@ class User extends Authenticatable
         'friendship'
     ];
 
+    public const INTENTION_EMOJI_MAP = [
+        'intimacy'   => '💜',
+        'business'   => '💼',
+        'friendship' => '🤝'
+        // add more as needed
+    ];
+
     protected $with = ['bio'];
 
     protected $guarded = [];

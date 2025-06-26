@@ -6,6 +6,7 @@ use App\Models\Chat;
 use App\Models\Swipe;
 use App\Models\User;
 use App\Notifications\MatchCreated;
+use App\Notifications\UserWaved;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
@@ -114,6 +115,23 @@ class StoreSwipeControllerTest extends TestCase
         ]);
 
         $response->assertUnprocessable();
+    }
+
+    public function test_it_notifies_user_if_they_are_swiped_on()
+    {
+        Notification::fake();
+
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
+
+        $response = $this->actingAs($user2)->postJson('/api/swipes', [
+            'swipee_id' => $user1->getKey(),
+            'direction' => 'right',
+        ]);
+
+        $response->assertCreated();
+
+        Notification::assertSentTo($user1, UserWaved::class);
     }
 
     public static function provideInvalidParameters(): array

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Chat;
 use App\Notifications\MatchCreated;
+use App\Notifications\UserWaved;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -61,6 +62,9 @@ class StoreSwipeController extends Controller
 
             $swipe->swiper->notify(new MatchCreated($swipe->swipee, $chat));
             $swipe->swipee->notify(new MatchCreated($swipe->swiper, $chat));
+        }
+        else if ($request->direction == 'right') {
+            $swipe->swipee->notify(new UserWaved($swipe->swiper));
         }
 
         return response()->json([

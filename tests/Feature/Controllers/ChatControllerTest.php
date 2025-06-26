@@ -36,12 +36,14 @@ class ChatControllerTest extends TestCase
             ->assertJsonFragment([
                 'id'       => $chat->getKey(),
                 'user_one' => [
-                    'id'   => $userOne->getKey(),
-                    'name' => $userOne->name,
+                    'id'        => $userOne->getKey(),
+                    'image_url' => null,
+                    'name'      => $userOne->name,
                 ],
                 'user_two' => [
-                    'id'   => $userTwo->getKey(),
-                    'name' => $userTwo->name,
+                    'id'        => $userTwo->getKey(),
+                    'image_url' => null,
+                    'name'      => $userTwo->name,
                 ],
             ]);
 

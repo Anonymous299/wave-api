@@ -9,8 +9,8 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\StoreMessageController;
 use App\Http\Controllers\StoreSwipeController;
 use App\Http\Controllers\UpdateUserController;
-use App\Http\Controllers\UpdateFcmTokenController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ShowUserController;
 
 /**
  * Health
@@ -30,6 +30,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('location', ChangeUserLocationController::class)
             ->name('location.update');
+
+        Route::get('user', ShowUserController::class)->name('user');
     });
 
     Route::prefix('swipes')->name('swipes.')->group(function () {
@@ -51,6 +53,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/fcm-test', function(Illuminate\Http\Request $request) {
         auth()->user()->notify(new \App\Notifications\MatchCreated(\App\Models\User::query()->firstOrFail(), \App\Models\Chat::query()->firstOrFail()));
+
+        return response()->json(['status' => 'ok']);
+    });
+
+    Route::get('/fcm-test-waved', function(Illuminate\Http\Request $request) {
+        auth()->user()->notify(new \App\Notifications\UserWaved(\App\Models\User::query()->firstOrFail()));
 
         return response()->json(['status' => 'ok']);
     });

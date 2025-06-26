@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Events\MessageSent;
+use App\Models\Chat;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class StoreMessageController extends Controller
 {
@@ -44,7 +46,15 @@ class StoreMessageController extends Controller
 
         /* @var User $user */
         $user = auth()->user();
-        $chat = $user->chats()->findOrFail($request->input('chat_id'));
+        $chat = Chat::query()->findOrFail($request->get('chat_id'));
+
+        if (
+            (string)$chat->user_one_id !== (string)$user->getKey()
+            && (string)$chat->user_two_id !== (string)$user->getKey()
+        ) {
+            return response()->json([], 404);
+        }
+
         $message = $chat->messages()->create([
             'sender_id' => $user->getKey(),
             'body'      => $request->input('body'),
