@@ -15,7 +15,7 @@ class TextReceived extends Notification
 {
     use Queueable;
 
-    public function __construct(private readonly User $textedBy, private readonly String $text)
+    public function __construct(private readonly User $textedBy, private readonly string $text, private readonly string $chat_id)
     {
     }
 
@@ -30,11 +30,11 @@ class TextReceived extends Notification
         return (new FcmMessage(
             notification: new FcmNotification(
                 title: "{$this->textedBy->name}",
-                body: $text,
+                body: $this->text,
             )
         ))
             ->data([
-                'chat_id'   => $this->chat->id,
+                'chat_id'   => $this->chat_id,
                 'type'    => 'text'
             ])
             ->custom([
