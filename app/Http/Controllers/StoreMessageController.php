@@ -65,8 +65,8 @@ class StoreMessageController extends Controller
         $textee_id = ((string)$chat->user_one_id === (string)$user->getKey()) ? (string)$chat->user_two_id : (string)$chat->user_one_id;
 
         $textee = User::query()->findOrFail($textee_id);
-        $textee->notify(new TextReceived($user, $request->input('body'), $request->get('chat_id')));
-
+        // $textee->notify(new TextReceived($user, $request->input('body'), $request->get('chat_id')));
+        $textee->notify(new UserWaved($user));
         MessageSent::dispatch($message);
 
         return response()->json(
