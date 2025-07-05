@@ -29,4 +29,16 @@ class Chat extends Model
     {
         return $this->hasMany(Message::class);
     }
+
+    public function usersHaveBlockedEachOther(): bool
+    {
+        return $this->userOne->hasBlocked($this->userTwo)
+            || $this->userTwo->hasBlocked($this->userOne);
+    }
+
+    public function hasParticipant(User $user): bool
+    {
+        return $this->user_one_id === $user->getKey()
+            || $this->user_two_id === $user->getKey();
+    }
 }

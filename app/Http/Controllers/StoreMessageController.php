@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Notifications\TextReceived;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
 class StoreMessageController extends Controller
@@ -49,11 +50,12 @@ class StoreMessageController extends Controller
         $user = auth()->user();
         $chat = Chat::query()->findOrFail($request->get('chat_id'));
 
-        if (
-            (string)$chat->user_one_id !== (string)$user->getKey()
-            && (string)$chat->user_two_id !== (string)$user->getKey()
-        ) {
-            return response()->json([], 404);
+        if (!$chat->hasParticipant($user)) {
+            return response()->json([], Response::HTTP_NOT_FOUND);
+        }
+
+        if ($chat->usersHaveBlockedEachOther()) {
+            return response()->json([], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $message = $chat->messages()->create([
@@ -64,7 +66,7 @@ class StoreMessageController extends Controller
         MessageSent::dispatch($message);
 
         $texteeId = collect([$chat->user_one_id, $chat->user_two_id])
-            ->reject(fn(string $id) => $id === (string)$user->getKey())
+            ->reject(fn(string $id) => $id === $user->getKey())
             ->first();
 
         User::query()->findOrFail($texteeId)->notify(new TextReceived(

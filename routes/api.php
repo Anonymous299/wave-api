@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BlockUserController;
 use App\Http\Controllers\ChangeUserLocationController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DeleteUserController;
@@ -34,6 +35,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('user', ShowUserController::class)->name('user');
         Route::delete('/', DeleteUserController::class)->name('delete');
+
+        Route::post('block', BlockUserController::class)->name('block');
     });
 
     Route::prefix('swipes')->name('swipes.')->group(function () {
@@ -53,27 +56,27 @@ Route::middleware('auth:sanctum')->group(function () {
             ->name('messages');
     });
 
-    Route::get('/fcm-test', function(Illuminate\Http\Request $request) {
+    Route::get('/fcm-test', function (Illuminate\Http\Request $request) {
         auth()->user()->notify(new \App\Notifications\MatchCreated(\App\Models\User::query()->firstOrFail(), \App\Models\Chat::query()->firstOrFail()));
 
         return response()->json(['status' => 'ok']);
     });
 
-    Route::get('/fcm-test-waved', function(Illuminate\Http\Request $request) {
+    Route::get('/fcm-test-waved', function (Illuminate\Http\Request $request) {
         auth()->user()->notify(new \App\Notifications\UserWaved(\App\Models\User::query()->firstOrFail()));
 
         return response()->json(['status' => 'ok']);
     });
 
-    Route::get('message-test', function(Illuminate\Http\Request $request) {
+    Route::get('message-test', function (Illuminate\Http\Request $request) {
         $chatId = $request->input('chat_id');
 
         $user = auth()->user();
 
         $message = \App\Models\Message::query()->create([
-            'chat_id' => $chatId,
+            'chat_id'   => $chatId,
             'sender_id' => $user->getKey(),
-            'body' => "this message was sent by the shadow wizard money gang\nwe love casting spells"
+            'body'      => "this message was sent by the shadow wizard money gang\nwe love casting spells"
         ]);
 
         \App\Events\MessageSent::dispatch($message);

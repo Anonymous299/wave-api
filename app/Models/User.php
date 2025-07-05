@@ -43,6 +43,7 @@ class User extends Authenticatable
 
     protected $casts = [
         'location' => Point::class,
+        'id'       => 'string',
     ];
 
     protected function casts(): array
@@ -94,5 +95,30 @@ class User extends Authenticatable
     public function routeNotificationForFcm(): array|string|null
     {
         return $this->fcm_token ?: null;
+    }
+
+    public function blockedUsers(): HasMany
+    {
+        return $this->hasMany(BlockedUser::class);
+    }
+
+    public function block(User|string $blocked): void
+    {
+        $idToBlock = $blocked instanceof User ? $blocked->getKey() : $blocked;
+
+        if ($this->getKey() === $idToBlock) {
+            throw new \Exception('snickers');
+        }
+
+        $this->blockedUsers()->create(['blocked_id' => $idToBlock]);
+    }
+
+    public function hasBlocked(User|string $blocked): bool
+    {
+        $blockedId = $blocked instanceof User ? $blocked->getKey() : $blocked;
+
+        return $this->blockedUsers()
+            ->where('blocked_id', $blockedId)
+            ->exists();
     }
 }

@@ -166,6 +166,35 @@ class StoreMessageControllerTest extends TestCase
         Notification::assertSentTo($userTwo, TextReceived::class);
     }
 
+    public function test_it_disallows_messaging_blocked_users()
+    {
+        Event::fake();
+
+        $userOne = User::factory()->create();
+        $userTwo = User::factory()->create();
+
+        $userOne->block($userTwo);
+
+        $chat = Chat::query()->create([
+            'user_one_id' => $userOne->getKey(),
+            'user_two_id' => $userTwo->getKey(),
+        ]);
+
+        $response = $this->actingAs($userOne)->postJson('/api/messages', [
+            'chat_id' => $chat->getKey(),
+            'body'    => 'Hello, world.',
+        ]);
+
+        $response->assertUnprocessable();
+        $this->assertDatabaseMissing('messages', [
+            'chat_id'   => $chat->getKey(),
+            'sender_id' => $userOne->getKey(),
+            'body'      => 'Hello, world.',
+        ]);
+
+        Event::assertNotDispatched(MessageSent::class);
+    }
+
     public static function provideInvalidParameters(): array
     {
         return [
