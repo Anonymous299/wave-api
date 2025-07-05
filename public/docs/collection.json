@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "wave-api API Documentation",
-        "_postman_id": "a783989a-d16f-425e-a2ef-b66041017b29",
+        "_postman_id": "66f2aaa3-9263-44f5-aeb0-2300f8abe87a",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -226,7 +226,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"fcm_token\":\"fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg\",\"intention\":\"intimacy\",\"bio\":{\"gender\":\"male\",\"age\":28,\"job\":\"Software Engineer\",\"company\":\"Acme Corp\",\"education\":\"B.Sc. Computer Science\",\"about\":\"Passionate about building scalable systems.\",\"images\":[\"architecto\"]}}"
+                            "raw": "{\"name\":\"b\",\"fcm_token\":\"fMEQMOF0xEELbP7icvPD:APA91bHQOcmVEbg\",\"intention\":\"business\",\"bio\":{\"gender\":\"male\",\"age\":28,\"job\":\"Software Engineer\",\"company\":\"Acme Corp\",\"education\":\"B.Sc. Computer Science\",\"about\":\"Passionate about building scalable systems.\",\"images\":[\"architecto\"]}}"
                         },
                         "description": "Updates the authenticated user's bio information.\nAccepts a nested `bio` object with optional fields.",
                         "auth": {
@@ -285,6 +285,85 @@
                             "name": ""
                         }
                     ]
+                },
+                {
+                    "name": "GET api\/users\/user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users\/user",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users\/user"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"id\":\"architecto\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "DELETE api\/users",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users"
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
                 },
                 {
                     "name": "Store Swipe",
@@ -510,6 +589,54 @@
                             "path": "api\/fcm-test",
                             "query": [],
                             "raw": "{{baseUrl}}\/api\/fcm-test"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET api\/fcm-test-waved",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/fcm-test-waved",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/fcm-test-waved"
                         },
                         "method": "GET",
                         "header": [

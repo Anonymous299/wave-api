@@ -341,6 +341,11 @@ paths:
             schema:
               type: object
               properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+                  nullable: false
                 fcm_token:
                   type: string
                   description: "Optional. The Firebase Cloud Messaging token for the user's device."
@@ -349,7 +354,7 @@ paths:
                 intention:
                   type: string
                   description: ''
-                  example: intimacy
+                  example: business
                   nullable: false
                   enum:
                     - intimacy
@@ -437,6 +442,52 @@ paths:
               required:
                 - latitude
                 - longitude
+      security: []
+  /api/users/user:
+    get:
+      summary: ''
+      operationId: getApiUsersUser
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: false
+              required:
+                - id
+      security: []
+  /api/users:
+    delete:
+      summary: ''
+      operationId: deleteApiUsers
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
       security: []
   /api/swipes:
     post:
@@ -891,6 +942,28 @@ paths:
     get:
       summary: ''
       operationId: getApiFcmTest
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/fcm-test-waved:
+    get:
+      summary: ''
+      operationId: getApiFcmTestWaved
       description: ''
       parameters: []
       responses:

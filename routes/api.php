@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ChangeUserLocationController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\DeleteUserController;
 use App\Http\Controllers\GetNearbyUserCountController;
 use App\Http\Controllers\GetNearbyUsersController;
 use App\Http\Controllers\LoginController;
@@ -32,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
             ->name('location.update');
 
         Route::get('user', ShowUserController::class)->name('user');
+        Route::delete('/', DeleteUserController::class)->name('delete');
     });
 
     Route::prefix('swipes')->name('swipes.')->group(function () {
