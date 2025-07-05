@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
+use App\Models\Chat;
 use App\Models\Swipe;
 use App\Models\User;
 use Clickbar\Magellan\Data\Geometries\Point;
@@ -72,7 +73,10 @@ class GetNearbyUsersController extends Controller
             $request->input('longitude')
         ) : $authUser->location;
 
-        $userHasSwipedOn = $authUser->swipes()->select('swipee_id')->get()->map(fn(Swipe $s) => $s->swipee_id);
+        $userHasSwipedOn = $authUser->swipes()
+            ->select('swipee_id')
+            ->get()
+            ->map(fn(Swipe $s) => $s->swipee_id);
 
         return UserResource::collection(User::query()
             ->select()
@@ -87,6 +91,10 @@ class GetNearbyUsersController extends Controller
             ->where('id', '!=', $authUser->getKey())
             ->whereNotIn('id', $userHasSwipedOn)
             ->where('intention', $authUser->intention)
+            ->whereNotIn(
+                'id',
+                $authUser->matches()->select('swipee_id')->get()->toArray(),
+            )
             ->whereNotNull('name')
             ->orderBy('distance')
             ->get());

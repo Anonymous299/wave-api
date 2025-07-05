@@ -6,6 +6,7 @@ use App\Models\Chat;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Arr;
 use NotificationChannels\Fcm\FcmChannel;
 use NotificationChannels\Fcm\FcmMessage;
 use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
@@ -28,16 +29,18 @@ class UserWaved extends Notification
     {
         $intention = $this->wavedBy->intention ?? '';
         $emoji = User::INTENTION_EMOJI_MAP[strtolower($intention)] ?? '';
+        $firstImage = Arr::get($this->wavedBy->bio?->images, '0', '');
 
         return (new FcmMessage(
             notification: new FcmNotification(
-                title: "You've received a Wave! " . ($emoji ? " $emoji" : ''),
+                title: "You've received a Wave! " . ($emoji ? "$emoji" : ''),
                 body: "{$this->wavedBy->name} waved at you!",
             )
         ))
             ->data([
-                'user_id' => $this->wavedBy->getKey(),
-                'type'    => 'wave'
+                'user_id'         => $this->wavedBy->getKey(),
+                'profile_picture' => $firstImage,
+                'type'            => 'wave'
             ])
             ->custom([
                 'android' => [
@@ -52,7 +55,7 @@ class UserWaved extends Notification
                 'apns'    => [
                     'payload'     => [
                         'aps' => [
-                            'sound' => 'default',
+                            'sound'             => 'default',
                             'content-available' => 1
                         ],
                     ],

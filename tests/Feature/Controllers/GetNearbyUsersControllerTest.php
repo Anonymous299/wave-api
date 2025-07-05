@@ -92,9 +92,6 @@ class GetNearbyUsersControllerTest extends TestCase
         $userTwo = User::factory()->create(
             ['location' => Point::makeGeodetic(self::TEST_LAT_A, self::TEST_LNG_A)]
         );
-        $userThree = User::factory()->create(
-            ['location' => Point::makeGeodetic(self::TEST_LAT_A, self::TEST_LNG_A)]
-        );
 
         $user->swipes()->create([
             'swipee_id' => $userTwo->getKey(),
@@ -103,7 +100,7 @@ class GetNearbyUsersControllerTest extends TestCase
 
         $response = $this->actingAs($user)->getJson(route('users.nearby', ['distance' => 1000]));
         $response->assertOk();
-        $response->assertJsonCount(1);
+        $response->assertJsonMissing(['id' => $userTwo->getKey()]);
     }
 
     public function test_it_only_returns_users_with_matching_intention()
@@ -138,16 +135,16 @@ class GetNearbyUsersControllerTest extends TestCase
     public function test_it_only_returns_users_non_null_names()
     {
         $authUser = User::factory()->create([
-            'location'  => Point::makeGeodetic(self::TEST_LAT_A, self::TEST_LNG_A),
+            'location' => Point::makeGeodetic(self::TEST_LAT_A, self::TEST_LNG_A),
         ]);
 
         $notMatchingUser = User::factory()->create([
-            'name'      => null,
-            'location'  => Point::makeGeodetic(self::TEST_LAT_B, self::TEST_LNG_B),
+            'name'     => null,
+            'location' => Point::makeGeodetic(self::TEST_LAT_B, self::TEST_LNG_B),
         ]);
 
         $matchingUser = User::factory()->create([
-            'location'  => Point::makeGeodetic(self::TEST_LAT_B, self::TEST_LNG_B),
+            'location' => Point::makeGeodetic(self::TEST_LAT_B, self::TEST_LNG_B),
         ]);
 
         $response = $this->actingAs($authUser)->getJson(route('users.nearby', [
@@ -159,5 +156,36 @@ class GetNearbyUsersControllerTest extends TestCase
         $response->assertOk();
         $response->assertJsonFragment(['id' => $matchingUser->getKey()]);
         $response->assertJsonMissing(['id' => $notMatchingUser->getKey()]);
+    }
+
+    public function test_it_does_not_return_users_that_you_have_matched_with()
+    {
+        $authUser = User::factory()->create([
+            'location' => Point::makeGeodetic(self::TEST_LAT_A, self::TEST_LNG_A),
+        ]);
+        $userThatHasMatched = User::factory()->create([
+            'location' => Point::makeGeodetic(self::TEST_LAT_A, self::TEST_LNG_A),
+        ]);
+
+        $authUser->swipes()->create([
+            'swipee_id' => $userThatHasMatched->getKey(),
+            'direction' => 'right',
+        ]);
+
+        $userThatHasMatched->swipes()->create([
+            'swipee_id' => $authUser->getKey(),
+            'direction' => 'right',
+        ]);
+
+        $this->assertTrue($authUser->swipes()->first()->isMatch());
+        $this->assertTrue($userThatHasMatched->swipes()->first()->isMatch());
+
+        $response = $this->actingAs($authUser)->getJson(route('users.nearby', [
+            'latitude'  => self::TEST_LAT_A,
+            'longitude' => self::TEST_LNG_A,
+            'distance'  => 5,
+        ]));
+
+        $response->assertJsonMissing(['id' => $userThatHasMatched->getKey()]);
     }
 }

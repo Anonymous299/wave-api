@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\MessageSent;
 use App\Models\Chat;
 use App\Models\User;
+use App\Notifications\TextReceived;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -61,6 +62,16 @@ class StoreMessageController extends Controller
         ]);
 
         MessageSent::dispatch($message);
+
+        $texteeId = collect([$chat->user_one_id, $chat->user_two_id])
+            ->reject(fn(string $id) => $id === (string)$user->getKey())
+            ->first();
+
+        User::query()->findOrFail($texteeId)->notify(new TextReceived(
+            textedBy: $user,
+            text: $request->input('body'),
+            chat_id: $chat->id
+        ));
 
         return response()->json(
             ['message' => 'Message stored successfully.'],

@@ -6,16 +6,15 @@ use App\Models\Chat;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Arr;
 use NotificationChannels\Fcm\FcmChannel;
 use NotificationChannels\Fcm\FcmMessage;
 use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
-class MatchCreated extends Notification
+class TextReceived extends Notification
 {
     use Queueable;
 
-    public function __construct(private readonly User $matchedWith, private readonly Chat $chat)
+    public function __construct(private readonly User $textedBy, private readonly string $text, private readonly string $chat_id)
     {
     }
 
@@ -26,21 +25,19 @@ class MatchCreated extends Notification
 
     public function toFcm(object $notifiable): FcmMessage
     {
-        $intention = $this->matchedWith->intention ?? '';
-        $emoji = User::INTENTION_EMOJI_MAP[strtolower($intention)] ?? '';
-        $firstImage = Arr::get($this->matchedWith->bio?->images, '0', '');
+
+        $firstImage = $this->textedBy->bio?->images[0] ?? '';
 
         return (new FcmMessage(
             notification: new FcmNotification(
-                title: 'Successful connection' . ($emoji ? "$emoji" : ''),
-                body: "You and {$this->matchedWith->name} have connected.",
-            ),
+                title: "{$this->textedBy->name}",
+                body: $this->text,
+            )
         ))
             ->data([
-                'chat_id'   => $this->chat->id,
-                'intention' => $this->matchedWith->intention ?? '',
-                'profile_picture' => $firstImage,
-                'type'      => 'match'
+                'chat_id'         => $this->chat_id,
+                'type'            => 'text',
+                'profile_picture' => $firstImage
             ])
             ->custom([
                 'android' => [
@@ -55,7 +52,7 @@ class MatchCreated extends Notification
                 'apns'    => [
                     'payload'     => [
                         'aps' => [
-                            'sound' => 'default',
+                            'sound'             => 'default',
                             'content-available' => 1
                         ],
                     ],
@@ -66,4 +63,3 @@ class MatchCreated extends Notification
             ]);
     }
 }
-

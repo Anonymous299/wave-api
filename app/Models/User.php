@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -71,6 +72,18 @@ class User extends Authenticatable
     public function bio(): HasOne
     {
         return $this->hasOne(Bio::class);
+    }
+
+    public function matches(): HasMany
+    {
+        return $this->swipes()
+            ->where('direction', 'right')
+            ->whereHas('swipee', function ($query) {
+                $query->whereHas('swipes', function ($q) {
+                    $q->where('direction', 'right')
+                        ->where('swipee_id', $this->getKey());
+                });
+            });
     }
 
     /**

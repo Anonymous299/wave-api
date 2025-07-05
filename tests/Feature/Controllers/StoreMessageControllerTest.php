@@ -5,8 +5,10 @@ namespace Tests\Feature\Controllers;
 use App\Events\MessageSent;
 use App\Models\Chat;
 use App\Models\User;
+use App\Notifications\TextReceived;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -135,6 +137,33 @@ class StoreMessageControllerTest extends TestCase
             'chat_id' => $chat->getKey(),
             'body'    => 'This should not work',
         ])->assertNotFound();
+    }
+
+    public function test_it_notifies_users_of_message()
+    {
+        Notification::fake();
+
+        $userOne = User::factory()->create();
+        $userTwo = User::factory()->create();
+
+        $chat = Chat::query()->create([
+            'user_one_id' => $userOne->getKey(),
+            'user_two_id' => $userTwo->getKey(),
+        ]);
+
+        $response = $this->actingAs($userOne)->postJson('/api/messages', [
+            'chat_id' => $chat->getKey(),
+            'body'    => 'Hello, world.',
+        ]);
+
+        $response->assertCreated();
+        $this->assertDatabaseHas('messages', [
+            'chat_id'   => $chat->getKey(),
+            'sender_id' => $userOne->getKey(),
+            'body'      => 'Hello, world.',
+        ]);
+
+        Notification::assertSentTo($userTwo, TextReceived::class);
     }
 
     public static function provideInvalidParameters(): array
