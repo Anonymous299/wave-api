@@ -166,6 +166,9 @@ class GetNearbyUsersControllerTest extends TestCase
         $userThatHasMatched = User::factory()->create([
             'location' => Point::makeGeodetic(self::TEST_LAT_A, self::TEST_LNG_A),
         ]);
+        $userThatHasNotMatched = User::factory()->create([
+            'location' => Point::makeGeodetic(self::TEST_LAT_A, self::TEST_LNG_A),
+        ]);
 
         $authUser->swipes()->create([
             'swipee_id' => $userThatHasMatched->getKey(),
@@ -186,6 +189,8 @@ class GetNearbyUsersControllerTest extends TestCase
             'distance'  => 5,
         ]));
 
+        $response->assertOk();
         $response->assertJsonMissing(['id' => $userThatHasMatched->getKey()]);
+        $response->assertJsonFragment(['id' => $userThatHasNotMatched->getKey()]);
     }
 }
