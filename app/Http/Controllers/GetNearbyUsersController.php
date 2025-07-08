@@ -89,7 +89,6 @@ class GetNearbyUsersController extends Controller
                 ST::distanceSphere($origin, 'location'), '<=', $distanceInKm * 1000
             )
             ->where('id', '!=', $authUser->getKey())
-            ->whereNotIn('id', $userHasSwipedOn)
             ->where('intention', $authUser->intention)
             ->whereNotIn(
                 'id',
