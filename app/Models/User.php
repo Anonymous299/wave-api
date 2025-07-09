@@ -107,10 +107,21 @@ class User extends Authenticatable
         $idToBlock = $blocked instanceof User ? $blocked->getKey() : $blocked;
 
         if ($this->getKey() === $idToBlock) {
-            throw new \Exception('snickers');
+            throw new \Exception("You can't block yourself.");
         }
 
         $this->blockedUsers()->create(['blocked_id' => $idToBlock]);
+    }
+
+    public function unblock(User|string $blocked): void
+    {
+        $idToUnblock = $blocked instanceof User ? $blocked->getKey() : $blocked;
+
+        if ($this->getKey() === $idToUnblock) {
+            throw new \Exception("You can't unblock yourself.");
+        }
+
+        $this->blockedUsers()->where('blocked_id', $idToUnblock)->delete();
     }
 
     public function hasBlocked(User|string $blocked): bool

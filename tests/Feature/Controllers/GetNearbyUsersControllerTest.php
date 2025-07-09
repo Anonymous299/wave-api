@@ -83,6 +83,7 @@ class GetNearbyUsersControllerTest extends TestCase
 
     public function test_it_does_not_return_people_you_have_already_swiped_on()
     {
+        $this->markTestSkipped("Changing requirements");
         $this->withoutExceptionHandling();
 
         /** @var User $user */

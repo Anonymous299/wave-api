@@ -10,6 +10,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\StoreMessageController;
 use App\Http\Controllers\StoreSwipeController;
+use App\Http\Controllers\UnblockUserController;
 use App\Http\Controllers\UpdateUserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ShowUserController;
@@ -37,6 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/', DeleteUserController::class)->name('delete');
 
         Route::post('block', BlockUserController::class)->name('block');
+        Route::delete('unblock', UnblockUserController::class)->name('unblock');
     });
 
     Route::prefix('swipes')->name('swipes.')->group(function () {
