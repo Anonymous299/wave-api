@@ -126,9 +126,12 @@ class ChatControllerTest extends TestCase
         $response->assertJsonStructure([
             'data',
             'links',
-            'meta',
+            'meta' => [
+                'is_blocked',
+            ],
         ]);
         $this->assertCount(25, $response->json('data'));
+        $response->assertJsonFragment(['is_blocked' => false]);
     }
 
     public function test_it_returns_chats_in_correct_order()
@@ -183,5 +186,51 @@ class ChatControllerTest extends TestCase
 
         $this->getJson("/api/chats/{$chat->getKey()}/messages")
             ->assertUnauthorized();
+    }
+
+    public function test_chat_messages_returns_is_blocked_true_when_other_user_is_blocked()
+    {
+        $userOne = User::factory()->create();
+        $userTwo = User::factory()->create();
+
+        $chat = Chat::query()->create([
+            'user_one_id' => $userOne->getKey(),
+            'user_two_id' => $userTwo->getKey(),
+        ]);
+
+        Message::factory()->create([
+            'chat_id' => $chat->getKey(),
+            'sender_id' => $userTwo->getKey(),
+        ]);
+
+        $userOne->block($userTwo);
+
+        $response = $this->actingAs($userOne)
+            ->getJson("/api/chats/{$chat->getKey()}/messages");
+
+        $response->assertOk()
+            ->assertJsonFragment(['is_blocked' => true]);
+    }
+
+    public function test_chat_messages_returns_is_blocked_false_when_other_user_is_not_blocked()
+    {
+        $userOne = User::factory()->create();
+        $userTwo = User::factory()->create();
+
+        $chat = Chat::query()->create([
+            'user_one_id' => $userOne->getKey(),
+            'user_two_id' => $userTwo->getKey(),
+        ]);
+
+        Message::factory()->create([
+            'chat_id' => $chat->getKey(),
+            'sender_id' => $userTwo->getKey(),
+        ]);
+
+        $response = $this->actingAs($userOne)
+            ->getJson("/api/chats/{$chat->getKey()}/messages");
+
+        $response->assertOk()
+            ->assertJsonFragment(['is_blocked' => false]);
     }
 }
