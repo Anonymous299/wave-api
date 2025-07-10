@@ -11,6 +11,10 @@ class ChatResource extends JsonResource
 
     public function toArray(Request $request): array
     {
+        $user = auth()->user();
+        $otherUser = $user && $user->id === $this->userOne->id ? $this->userTwo : $this->userOne;
+        $isBlocked = $user ? $user->hasBlocked($otherUser->id) : false;
+
         return [
             'id'         => $this->id,
             'user_one'   => [
@@ -25,6 +29,7 @@ class ChatResource extends JsonResource
             ],
             'created_at' => $this->created_at,
             'messages'   => $this->messages()->limit(5)->latest()->get(),
+            'is_blocked' => $isBlocked,
         ];
     }
 }

@@ -45,6 +45,7 @@ class ChatControllerTest extends TestCase
                     'image_url' => null,
                     'name'      => $userTwo->name,
                 ],
+                'is_blocked' => false,
             ]);
 
         $data = json_decode($response->content());
@@ -96,6 +97,7 @@ class ChatControllerTest extends TestCase
         $this->assertCount(2, $data->data);
         $response->assertJsonFragment(['id' => $chat1->id]);
         $response->assertJsonFragment(['id' => $chat2->id]);
+        $response->assertJsonFragment(['is_blocked' => false]);
     }
 
     public function test_it_requires_authentication()
@@ -160,6 +162,42 @@ class ChatControllerTest extends TestCase
         $response->assertOk();
         $this->assertEquals($response->json('data')[0]['id'], $newerMessage->getKey());
         $this->assertEquals($response->json('data')[1]['id'], $olderMessage->getKey());
+    }
+
+    public function test_it_returns_is_blocked_true_when_user_is_blocked()
+    {
+        $userOne = User::factory()->create();
+        $userTwo = User::factory()->create();
+
+        $chat = Chat::query()->create([
+            'user_one_id' => $userOne->getKey(),
+            'user_two_id' => $userTwo->getKey(),
+        ]);
+
+        $userOne->block($userTwo);
+
+        $response = $this->actingAs($userOne)->getJson("/api/chats/{$chat->getKey()}");
+
+        $response
+            ->assertOk()
+            ->assertJsonFragment(['is_blocked' => true]);
+    }
+
+    public function test_it_returns_is_blocked_false_when_user_is_not_blocked()
+    {
+        $userOne = User::factory()->create();
+        $userTwo = User::factory()->create();
+
+        $chat = Chat::query()->create([
+            'user_one_id' => $userOne->getKey(),
+            'user_two_id' => $userTwo->getKey(),
+        ]);
+
+        $response = $this->actingAs($userOne)->getJson("/api/chats/{$chat->getKey()}");
+
+        $response
+            ->assertOk()
+            ->assertJsonFragment(['is_blocked' => false]);
     }
 
     public function test_chat_messages_returns_not_found_for_invalid_chat()
