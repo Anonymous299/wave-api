@@ -8,7 +8,7 @@ use App\Notifications\TextReceived;
 use App\Notifications\UserWaved;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 
 class StoreSwipeController extends Controller
@@ -47,15 +47,12 @@ class StoreSwipeController extends Controller
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $swipe = auth()->user()
-            ->swipes()
-            ->create([
-                'swipee_id' => $request->swipee_id,
-                'direction' => $request->direction,
-            ]);
+        $user = auth()->user();
 
-        // Check if users have already matched
-        $hasExistingMatch = auth()->user()->matches()->where('swipee_id', $request->swipee_id)->exists();
+        $otherUser = User::query()->findOrFail($request->input($request->swipee_id));
+
+         // Check if users have already matched
+        $hasExistingMatch = $user->matches()->where('swipee_id', $request->swipee_id)->exists();
         
         if ($hasExistingMatch) {
             if($request->direction == 'right'){
@@ -78,13 +75,20 @@ class StoreSwipeController extends Controller
                 ]);
                 
                 // Send FCM notification
-                $swipe->swipee->notify(new TextReceived($swipe->swiper, '👋 We\'re nearby!', $existingChat->getKey()));
+                $otherUser->notify(new TextReceived($user, '👋 We\'re nearby!', $existingChat->getKey()));
             }
         }
         }
 
         else{
-        $chat = null;
+             $swipe = auth()->user()
+            ->swipes()
+            ->create([
+                'swipee_id' => $request->swipee_id,
+                'direction' => $request->direction,
+            ]);
+
+
         if ($swipe->isMatch()) {
             $chat = Chat::query()->create([
                 'user_one_id' => $swipe->swiper->getKey(),
