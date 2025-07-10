@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Chat;
 use App\Notifications\MatchCreated;
+use App\Notifications\TextReceived;
 use App\Notifications\UserWaved;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -53,6 +54,34 @@ class StoreSwipeController extends Controller
                 'direction' => $request->direction,
             ]);
 
+        // Check if users have already matched
+        $hasExistingMatch = auth()->user()->matches()->where('swipee_id', $request->swipee_id)->exists();
+        
+        if ($hasExistingMatch && $request->direction == 'right') {
+            // Find existing chat
+            $existingChat = Chat::query()
+                ->where(function ($query) use ($request) {
+                    $query->where('user_one_id', auth()->user()->getKey())
+                          ->where('user_two_id', $request->swipee_id);
+                })
+                ->orWhere(function ($query) use ($request) {
+                    $query->where('user_one_id', $request->swipee_id)
+                          ->where('user_two_id', auth()->user()->getKey());
+                })
+                ->first();
+            
+            if ($existingChat) {
+                $existingChat->messages()->create([
+                    'sender_id' => auth()->user()->getKey(),
+                    'body' => '👋 We\'re nearby!',
+                ]);
+                
+                // Send FCM notification
+                $swipe->swipee->notify(new TextReceived($swipe->swiper, '👋 We\'re nearby!', $existingChat->getKey()));
+            }
+        }
+
+        else{
         $chat = null;
         if ($swipe->isMatch()) {
             $chat = Chat::query()->create([
@@ -66,6 +95,7 @@ class StoreSwipeController extends Controller
         else if ($request->direction == 'right') {
             $swipe->swipee->notify(new UserWaved($swipe->swiper));
         }
+    }
 
         return response()->json([
             'swipe'   => $swipe->toArray(),
