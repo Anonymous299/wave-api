@@ -84,7 +84,7 @@ class StoreSwipeController extends Controller
         return response()->json([
             'swipe'   => null,
             'match'   => true,
-            'chat_id' => $$existingChat?->getKey(),
+            'chat_id' => $existingChat?->getKey(),
         ], Response::HTTP_CREATED);
         }
 
