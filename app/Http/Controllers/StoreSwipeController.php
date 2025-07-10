@@ -57,7 +57,8 @@ class StoreSwipeController extends Controller
         // Check if users have already matched
         $hasExistingMatch = auth()->user()->matches()->where('swipee_id', $request->swipee_id)->exists();
         
-        if ($hasExistingMatch && $request->direction == 'right') {
+        if ($hasExistingMatch) {
+            if($request->direction == 'right'){
             // Find existing chat
             $existingChat = Chat::query()
                 ->where(function ($query) use ($request) {
@@ -79,6 +80,7 @@ class StoreSwipeController extends Controller
                 // Send FCM notification
                 $swipe->swipee->notify(new TextReceived($swipe->swiper, '👋 We\'re nearby!', $existingChat->getKey()));
             }
+        }
         }
 
         else{
