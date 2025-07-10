@@ -49,7 +49,7 @@ class StoreSwipeController extends Controller
 
         $user = auth()->user();
 
-        $otherUser = User::query()->findOrFail($request->input($request->swipee_id));
+        $otherUser = User::query()->findOrFail($request->swipee_id);
 
          // Check if users have already matched
         $hasExistingMatch = $user->matches()->where('swipee_id', $request->swipee_id)->exists();
