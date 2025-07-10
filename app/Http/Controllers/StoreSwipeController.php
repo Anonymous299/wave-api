@@ -80,9 +80,15 @@ class StoreSwipeController extends Controller
                 $otherUser->notify(new TextReceived($user, '👋 We\'re nearby!', $existingChat->getKey()));
             }
         }
+
+        return response()->json([
+            'swipe'   => null,
+            'match'   => true,
+            'chat_id' => $$existingChat?->getKey(),
+        ], Response::HTTP_CREATED);
         }
 
-        else{
+   
              $swipe = auth()->user()
             ->swipes()
             ->create([
@@ -103,7 +109,7 @@ class StoreSwipeController extends Controller
         else if ($request->direction == 'right') {
             $swipe->swipee->notify(new UserWaved($swipe->swiper));
         }
-    }
+    
 
         return response()->json([
             'swipe'   => $swipe->toArray(),
