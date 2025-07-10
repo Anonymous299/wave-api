@@ -47,6 +47,8 @@ class StoreSwipeController extends Controller
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+        $chat = null;
+
         $user = auth()->user();
 
         $otherUser = User::query()->findOrFail($request->swipee_id);
