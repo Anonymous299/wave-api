@@ -6,6 +6,7 @@ use App\Models\Chat;
 use App\Models\Swipe;
 use App\Models\User;
 use App\Notifications\MatchCreated;
+use App\Notifications\TextReceived;
 use App\Notifications\UserWaved;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
@@ -132,6 +133,100 @@ class StoreSwipeControllerTest extends TestCase
         $response->assertCreated();
 
         Notification::assertSentTo($user1, UserWaved::class);
+    }
+
+    public function test_it_sends_nearby_message_when_swiping_right_on_existing_match()
+    {
+        Notification::fake();
+
+        $swiper = User::factory()->create();
+        $swipee = User::factory()->create();
+
+        // Create existing match
+        $swiper->swipes()->create([
+            'swipee_id' => $swipee->getKey(),
+            'direction' => 'right',
+        ]);
+
+        $swipee->swipes()->create([
+            'swipee_id' => $swiper->getKey(),
+            'direction' => 'right',
+        ]);
+
+        // Create existing chat
+        $chat = Chat::create([
+            'user_one_id' => $swiper->getKey(),
+            'user_two_id' => $swipee->getKey(),
+        ]);
+
+        // Swipe right on existing match
+        $response = $this->actingAs($swiper)->postJson('/api/swipes', [
+            'swipee_id' => $swipee->getKey(),
+            'direction' => 'right',
+        ]);
+
+        $response->assertCreated();
+        $response->assertJson([
+            'match' => true,
+            'chat_id' => $chat->getKey(),
+        ]);
+
+        // Assert message was created
+        $this->assertDatabaseHas('messages', [
+            'chat_id' => $chat->getKey(),
+            'sender_id' => $swiper->getKey(),
+            'body' => '👋 We\'re nearby!',
+        ]);
+
+        // Assert notification was sent
+        Notification::assertSentTo($swipee, TextReceived::class);
+    }
+
+    public function test_it_does_nothing_when_swiping_left_on_existing_match()
+    {
+        Notification::fake();
+
+        $swiper = User::factory()->create();
+        $swipee = User::factory()->create();
+
+        // Create existing match
+        $swiper->swipes()->create([
+            'swipee_id' => $swipee->getKey(),
+            'direction' => 'right',
+        ]);
+
+        $swipee->swipes()->create([
+            'swipee_id' => $swiper->getKey(),
+            'direction' => 'right',
+        ]);
+
+        // Create existing chat
+        $chat = Chat::create([
+            'user_one_id' => $swiper->getKey(),
+            'user_two_id' => $swipee->getKey(),
+        ]);
+
+        // Swipe left on existing match
+        $response = $this->actingAs($swiper)->postJson('/api/swipes', [
+            'swipee_id' => $swipee->getKey(),
+            'direction' => 'left',
+        ]);
+
+        $response->assertCreated();
+        $response->assertJson([
+            'match' => true,
+            'chat_id' => $chat->getKey(),
+        ]);
+
+        // Assert no message was created
+        $this->assertDatabaseMissing('messages', [
+            'chat_id' => $chat->getKey(),
+            'sender_id' => $swiper->getKey(),
+            'body' => '👋 We\'re nearby!',
+        ]);
+
+        // Assert no notification was sent
+        Notification::assertNotSentTo($swipee, TextReceived::class);
     }
 
     public static function provideInvalidParameters(): array

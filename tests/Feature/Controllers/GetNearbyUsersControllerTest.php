@@ -41,6 +41,7 @@ class GetNearbyUsersControllerTest extends TestCase
                     'id'       => $expectedUser->getKey(),
                     'distance' => self::EXPECTED_DISTANCE,
                     'bio'      => ['id' => $expectedUser->bio()->first()->getKey()],
+                    'has_matched' => false,
                 ]
             ]
         ]);
@@ -75,7 +76,8 @@ class GetNearbyUsersControllerTest extends TestCase
             'data' => [
                 [
                     'id'       => $otherUser->getKey(),
-                    'distance' => self::EXPECTED_DISTANCE
+                    'distance' => self::EXPECTED_DISTANCE,
+                    'has_matched' => false
                 ]
             ],
         ]);
@@ -129,7 +131,7 @@ class GetNearbyUsersControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertJsonCount(1, 'data');
-        $response->assertJsonFragment(['id' => $matchingUser->getKey()]);
+        $response->assertJsonFragment(['id' => $matchingUser->getKey(), 'has_matched' => false]);
         $response->assertJsonMissing(['id' => $nonMatchingUser->getKey()]);
     }
 
@@ -155,7 +157,7 @@ class GetNearbyUsersControllerTest extends TestCase
         ]));
 
         $response->assertOk();
-        $response->assertJsonFragment(['id' => $matchingUser->getKey()]);
+        $response->assertJsonFragment(['id' => $matchingUser->getKey(), 'has_matched' => false]);
         $response->assertJsonMissing(['id' => $notMatchingUser->getKey()]);
     }
 
@@ -192,6 +194,6 @@ class GetNearbyUsersControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertJsonMissing(['id' => $userThatHasMatched->getKey()]);
-        $response->assertJsonFragment(['id' => $userThatHasNotMatched->getKey()]);
+        $response->assertJsonFragment(['id' => $userThatHasNotMatched->getKey(), 'has_matched' => false]);
     }
 }
