@@ -132,4 +132,11 @@ class User extends Authenticatable
             ->where('blocked_id', $blockedId)
             ->exists();
     }
+
+    public function hasMatchedWith(User|string $user): bool
+    {
+        $userId = $user instanceof User ? $user->getKey() : $user;
+
+        return $this->matches()->where('swipee_id', $userId)->exists();
+    }
 }

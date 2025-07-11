@@ -73,11 +73,6 @@ class GetNearbyUsersController extends Controller
             $request->input('longitude')
         ) : $authUser->location;
 
-        $userHasSwipedOn = $authUser->swipes()
-            ->select('swipee_id')
-            ->get()
-            ->map(fn(Swipe $s) => $s->swipee_id);
-
         return UserResource::collection(User::query()
             ->select()
             ->addSelect(
@@ -90,14 +85,6 @@ class GetNearbyUsersController extends Controller
             )
             ->where('id', '!=', $authUser->getKey())
             ->where('intention', $authUser->intention)
-            ->whereNotIn(
-                'id',
-                $authUser->matches()
-                    ->select('swipee_id')
-                    ->get()
-                    ->map(fn($id) => $id['swipee_id'])
-                    ->toArray(),
-            )
             ->whereNotNull('name')
             ->orderBy('distance')
             ->get());
