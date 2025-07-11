@@ -11,6 +11,13 @@ class UserResource extends JsonResource
 
     public function toArray(Request $request): array
     {
+        $user = auth()->user();
+        $hasMatched = false;
+
+        if ($user && $user->getKey() !== $this->id) {
+            $hasMatched = $user->hasMatchedWith($this->id);
+        }
+
         return [
             "id"                => $this->id,
             "name"              => $this->name,
@@ -22,7 +29,8 @@ class UserResource extends JsonResource
             "fcm_token"         => $this->fcm_token,
             "distance"          => $this->distance / 1000,
             "intention"         => $this->intention,
-            "bio"               => new BioResource($this->bio)
+            "bio"               => new BioResource($this->bio),
+            "has_matched"       => $hasMatched
         ];
     }
 }

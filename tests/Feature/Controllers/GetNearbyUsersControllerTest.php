@@ -161,6 +161,8 @@ class GetNearbyUsersControllerTest extends TestCase
 
     public function test_it_does_not_return_users_that_you_have_matched_with()
     {
+        $this->markTestSkipped("Changing requirements");
+
         $authUser = User::factory()->create([
             'location' => Point::makeGeodetic(self::TEST_LAT_A, self::TEST_LNG_A),
         ]);
@@ -193,5 +195,36 @@ class GetNearbyUsersControllerTest extends TestCase
         $response->assertOk();
         $response->assertJsonMissing(['id' => $userThatHasMatched->getKey()]);
         $response->assertJsonFragment(['id' => $userThatHasNotMatched->getKey()]);
+    }
+
+    public function test_it_returns_whether_a_user_has_matched_with_nearby_user()
+    {
+        $expectedUser = User::factory()
+            ->withBio()
+            ->create([
+                'location' => Point::makeGeodetic(self::TEST_LAT_A, self::TEST_LNG_A),
+            ]);
+
+        $otherUser = User::factory()->create([
+            'location' => Point::makeGeodetic(self::TEST_LAT_B, self::TEST_LNG_B),
+        ]);
+
+        $expectedUser->swipes()->create(['swipee_id' => $otherUser->getKey(), 'direction' => 'right']);
+        $otherUser->swipes()->create(['swipee_id' => $expectedUser->getKey(), 'direction' => 'right']);
+
+        $this->actingAs($otherUser)->get(route('users.nearby', [
+            'latitude'  => self::TEST_LAT_B,
+            'longitude' => self::TEST_LNG_B,
+            'distance'  => 50,
+        ]))->assertOk()->assertJson([
+            'data' => [
+                [
+                    'id'          => $expectedUser->getKey(),
+                    'distance'    => self::EXPECTED_DISTANCE,
+                    'bio'         => ['id' => $expectedUser->bio()->first()->getKey()],
+                    'has_matched' => true,
+                ]
+            ]
+        ]);
     }
 }
