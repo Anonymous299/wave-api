@@ -38,6 +38,7 @@ class MatchCreated extends Notification
         ))
             ->data([
                 'chat_id'   => $this->chat->id,
+                'other_user_id' => $this->matchedWith->getKey(),
                 'intention' => $this->matchedWith->intention ?? '',
                 'profile_picture' => $firstImage,
                 'type'      => 'match'
