@@ -36,7 +36,6 @@ class TextReceived extends Notification
         ))
             ->data([
                 'chat_id'         => $this->chat_id,
-                'other_user_id' => $this->textedBy->getKey(),
                 'type'            => 'text',
                 'profile_picture' => $firstImage
             ])
