@@ -132,11 +132,13 @@ class ChatController extends Controller
         $currentUserId = auth()->id();
         $otherUserId = $chat->user_one_id === $currentUserId ? $chat->user_two_id : $chat->user_one_id;
         
-        return MessageResource::collection($chat->messages()->latest()->paginate(25))
+        $messages = $chat->messages()->latest()->paginate(25);
+        
+        return MessageResource::collection($messages)
             ->additional([
-                'metadata' => [
+                'meta' => array_merge($messages->toArray()['meta'], [
                     'other_user_id' => $otherUserId,
-                ],
+                ]),
             ]);
     }
 }
