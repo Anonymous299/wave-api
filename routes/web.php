@@ -3,9 +3,10 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/password/reset/{token}', function ($token) {
-    return response()->json([
-        'message' => 'Use this token with your Flutter app',
-        'token' => $token,
-        'instructions' => 'Send a POST request to /api/auth/reset-password with this token, email, password, and password_confirmation'
-    ]);
+    $email = request()->get('email');
+    
+    // Redirect to your app's web page with token and email as query parameters
+    $resetUrl = "https://waveconnect.app/reset-password?token=" . urlencode($token) . "&email=" . urlencode($email);
+    
+    return redirect($resetUrl);
 })->name('password.reset');
