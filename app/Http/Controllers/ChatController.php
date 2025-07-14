@@ -129,11 +129,13 @@ class ChatController extends Controller
      */
     public function messages(Chat $chat): AnonymousResourceCollection
     {
+        $currentUserId = auth()->id();
+        $otherUserId = $chat->user_one_id === $currentUserId ? $chat->user_two_id : $chat->user_one_id;
+        
         return MessageResource::collection($chat->messages()->latest()->paginate(25))
             ->additional([
                 'metadata' => [
-                    'user_one' => $chat->userOne->id,
-                    'user_two' => $chat->userTwo->id,
+                    'other_user_id' => $otherUserId,
                 ],
             ]);
     }
