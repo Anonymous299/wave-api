@@ -8,6 +8,8 @@ use App\Http\Controllers\GetNearbyUserCountController;
 use App\Http\Controllers\GetNearbyUsersController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\StoreMessageController;
 use App\Http\Controllers\StoreSwipeController;
 use App\Http\Controllers\UnblockUserController;
@@ -95,4 +97,6 @@ Route::prefix('auth')->name('auth.')->group(function () {
 
     Route::post('register', RegisterController::class)->name('register');
     Route::post('login', LoginController::class)->name('login');
+    Route::post('forgot-password', ForgotPasswordController::class)->name('forgot-password');
+    Route::post('reset-password', ResetPasswordController::class)->name('reset-password');
 });
