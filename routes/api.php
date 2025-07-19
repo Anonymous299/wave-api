@@ -100,3 +100,12 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::post('forgot-password', ForgotPasswordController::class)->name('forgot-password');
     Route::post('reset-password', ResetPasswordController::class)->name('reset-password');
 });
+
+Route::get('/password/reset/{token}', function ($token) {
+    $email = request()->get('email');
+    
+    // Redirect to your app's web page with token and email as query parameters
+    $resetUrl = "https://waveconnect.app/reset-password?token=" . urlencode($token) . "&email=" . urlencode($email);
+    
+    return redirect($resetUrl);
+})->name('password.reset');
