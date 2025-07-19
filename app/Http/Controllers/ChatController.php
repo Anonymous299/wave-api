@@ -129,6 +129,15 @@ class ChatController extends Controller
      */
     public function messages(Chat $chat): AnonymousResourceCollection
     {
-        return MessageResource::collection($chat->messages()->latest()->paginate(25));
+        $user = auth()->user();
+        $otherUser = $user && $user->id === $chat->user_one_id ? $chat->userTwo : $chat->userOne;
+        $isBlocked = $user ? $user->hasBlocked($otherUser->id) : false;
+
+        return MessageResource::collection($chat->messages()->latest()->paginate(25))
+            ->additional([
+                'meta' => [
+                    'is_blocked' => $isBlocked,
+                ]
+            ]);
     }
 }

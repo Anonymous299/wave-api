@@ -84,7 +84,6 @@ class GetNearbyUsersController extends Controller
                 ST::distanceSphere($origin, 'location'), '<=', $distanceInKm * 1000
             )
             ->where('id', '!=', $authUser->getKey())
-            ->where('intention', $authUser->intention)
             ->whereNotNull('name')
             ->orderBy('distance')
             ->get());

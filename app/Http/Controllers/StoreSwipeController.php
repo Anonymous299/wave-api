@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Chat;
 use App\Notifications\MatchCreated;
+use App\Notifications\TextReceived;
 use App\Notifications\UserWaved;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 
 class StoreSwipeController extends Controller
@@ -46,14 +47,56 @@ class StoreSwipeController extends Controller
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $swipe = auth()->user()
+        $chat = null;
+
+        $user = auth()->user();
+
+        $otherUser = User::query()->findOrFail($request->swipee_id);
+
+         // Check if users have already matched
+        $hasExistingMatch = $user->matches()->where('swipee_id', $request->swipee_id)->exists();
+        
+        if ($hasExistingMatch) {
+            if($request->direction == 'right'){
+            // Find existing chat
+            $existingChat = Chat::query()
+                ->where(function ($query) use ($request) {
+                    $query->where('user_one_id', auth()->user()->getKey())
+                          ->where('user_two_id', $request->swipee_id);
+                })
+                ->orWhere(function ($query) use ($request) {
+                    $query->where('user_one_id', $request->swipee_id)
+                          ->where('user_two_id', auth()->user()->getKey());
+                })
+                ->first();
+            
+            if ($existingChat) {
+                $existingChat->messages()->create([
+                    'sender_id' => auth()->user()->getKey(),
+                    'body' => '👋 We\'re nearby!',
+                ]);
+                
+                // Send FCM notification
+                $otherUser->notify(new TextReceived($user, '👋 We\'re nearby!', $existingChat->getKey()));
+            }
+        }
+
+        return response()->json([
+            'swipe'   => null,
+            'match'   => true,
+            'chat_id' => $existingChat?->getKey(),
+        ], Response::HTTP_CREATED);
+        }
+
+   
+             $swipe = auth()->user()
             ->swipes()
             ->create([
                 'swipee_id' => $request->swipee_id,
                 'direction' => $request->direction,
             ]);
 
-        $chat = null;
+
         if ($swipe->isMatch()) {
             $chat = Chat::query()->create([
                 'user_one_id' => $swipe->swiper->getKey(),
@@ -66,6 +109,7 @@ class StoreSwipeController extends Controller
         else if ($request->direction == 'right') {
             $swipe->swipee->notify(new UserWaved($swipe->swiper));
         }
+    
 
         return response()->json([
             'swipe'   => $swipe->toArray(),
