@@ -99,8 +99,9 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::post('login', LoginController::class)->name('login');
     Route::post('forgot-password', ForgotPasswordController::class)->name('forgot-password');
     Route::post('reset-password', ResetPasswordController::class)->name('reset-password');
+});
 
-    Route::get('/password/reset/{token}', function ($token) {
+Route::get('/password/reset/{token}', function ($token) {
     $email = request()->get('email');
     
     // Redirect to your app's web page with token and email as query parameters
@@ -108,4 +109,3 @@ Route::prefix('auth')->name('auth.')->group(function () {
     
     return redirect($resetUrl);
 })->name('password.reset');
-});
