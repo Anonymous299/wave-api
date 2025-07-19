@@ -16,6 +16,8 @@ use App\Http\Controllers\UnblockUserController;
 use App\Http\Controllers\UpdateUserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ShowUserController;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Http\Request;
 
 /**
  * Health
@@ -98,14 +100,18 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::post('register', RegisterController::class)->name('register');
     Route::post('login', LoginController::class)->name('login');
     Route::post('forgot-password', ForgotPasswordController::class)->name('forgot-password');
-    Route::post('reset-password', ResetPasswordController::class)->name('reset-password');
+    Route::post('/reset-password/{token}', function (Request $request, string $token) {
+    $email = $request->query('email');
+
+    return Redirect::to("https://waveconnect.app/reset-password?token=" . urlencode($token) . "&email=" . urlencode($email));
+})->middleware('guest')->name('password.reset');
 });
 
-Route::get('/password/reset/{token}', function ($token) {
-    $email = request()->get('email');
+// Route::get('/password/reset/{token}', function ($token) {
+//     $email = request()->get('email');
     
-    // Redirect to your app's web page with token and email as query parameters
-    $resetUrl = "https://waveconnect.app/reset-password?token=" . urlencode($token) . "&email=" . urlencode($email);
+//     // Redirect to your app's web page with token and email as query parameters
+//     $resetUrl = "https://waveconnect.app/reset-password?token=" . urlencode($token) . "&email=" . urlencode($email);
     
-    return redirect($resetUrl);
-})->name('password.reset');
+//     return redirect($resetUrl);
+// })->name('password.reset');
