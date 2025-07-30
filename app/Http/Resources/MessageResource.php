@@ -13,9 +13,7 @@ class MessageResource extends JsonResource
         return [
             'id'         => $this->id,
             'body'       => $this->body,
-            'sender'     => User::query()
-                ->findOrFail($this->sender_id)
-                ->toResource(),
+            'sender_id'  => $this->sender_id,
             'chat_id'    => $this->chat_id,
             'created_at' => $this->created_at,
         ];
