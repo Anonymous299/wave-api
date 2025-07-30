@@ -137,6 +137,7 @@ class ChatController extends Controller
             ->additional([
                 'meta' => [
                     'is_blocked' => $isBlocked,
+                    'sender_id' => $otherUser->id,
                 ]
             ]);
     }
