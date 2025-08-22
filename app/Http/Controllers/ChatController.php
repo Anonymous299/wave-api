@@ -133,11 +133,16 @@ class ChatController extends Controller
         $otherUser = $user && $user->id === $chat->user_one_id ? $chat->userTwo : $chat->userOne;
         $isBlocked = $user ? $user->hasBlocked($otherUser->id) : false;
 
+        // Load the bio relationship to get images
+        $otherUser->load('bio');
+        
         return MessageResource::collection($chat->messages()->latest()->paginate(25))
             ->additional([
                 'meta' => [
                     'is_blocked' => $isBlocked,
                     'other_user_id' => $otherUser->id,
+                    'other_user_name' => $otherUser->name,
+                    'other_user_images' => $otherUser->bio ? $otherUser->bio->images : [],
                 ]
             ]);
     }
